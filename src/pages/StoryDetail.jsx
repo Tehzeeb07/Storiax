@@ -17,9 +17,9 @@ function MentionLink({ username }) {
     }
     fetchUser();
   }, [username]);
-  if (!userId) return <span className="text-[#8b6f47] font-medium">@{username}</span>;
+  if (!userId) return <span className="text-[#6A4A50] font-medium">@{username}</span>;
   return (
-    <Link to={`/profile/${userId}`} className="text-[#8b6f47] font-medium hover:underline">
+    <Link to={`/profile/${userId}`} className="text-[#6A4A50] font-medium hover:underline">
       @{username}
     </Link>
   );
@@ -126,7 +126,7 @@ export default function StoryDetail() {
   function renderMentionDropdown(suggestions, currentText, setter, clearSuggestions) {
     if (suggestions.length === 0) return null;
     return (
-      <div className="absolute z-50 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden w-64 mt-1 left-0">
+      <div className="absolute z-50 bg-white border border-[#DCD5C8] rounded-2xl shadow-lg overflow-hidden w-64 mt-1 left-0">
         {suggestions.map((u) => (
           <button
             key={u.id}
@@ -134,16 +134,16 @@ export default function StoryDetail() {
               e.preventDefault();
               insertMention(u.username, currentText, setter, clearSuggestions);
             }}
-            className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#faf7f2] w-full text-left transition"
+            className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FBF8F3] w-full text-left transition"
           >
-            <div className="w-7 h-7 rounded-full bg-[#e8dfd0] overflow-hidden flex items-center justify-center text-xs font-bold text-[#8b6f47] shrink-0">
+            <div className="w-7 h-7 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-xs font-bold text-[#6A4A50] shrink-0">
               {u.avatar_url ? (
                 <img src={u.avatar_url} alt="avatar" className="w-full h-full object-cover" />
               ) : u.full_name?.charAt(0) || "?"}
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-800">{u.full_name}</p>
-              <p className="text-xs text-gray-400">@{u.username}</p>
+              <p className="text-sm font-medium text-[#221A14]">{u.full_name}</p>
+              <p className="text-xs text-[#8B907F]">@{u.username}</p>
             </div>
           </button>
         ))}
@@ -222,7 +222,7 @@ export default function StoryDetail() {
 
   function renderAvatar(profile) {
     return (
-      <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-sm font-bold text-gray-500 shrink-0">
+      <div className="w-8 h-8 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-sm font-bold text-[#6A4A50] shrink-0">
         {profile?.avatar_url ? (
           <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
         ) : profile?.full_name?.charAt(0) || "?"}
@@ -237,7 +237,7 @@ export default function StoryDetail() {
       <button
         onClick={() => handleCommentLike(commentId)}
         className={`flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium transition ${
-          isLiked ? "bg-red-50 border-red-200 text-red-500" : "bg-white border-gray-200 text-gray-400 hover:border-red-300 hover:text-red-500"
+          isLiked ? "bg-[#F3E7E5] border-[#6A4A50]/30 text-[#4B1F24]" : "bg-white border-[#DCD5C8] text-[#8B907F] hover:border-[#6A4A50] hover:text-[#4B1F24]"
         }`}
       >
         <span>{isLiked ? "❤️" : "🤍"}</span>
@@ -249,39 +249,37 @@ export default function StoryDetail() {
   const topLevelComments = comments.filter((c) => !c.parent_id);
   const getReplies = (parentId) => comments.filter((c) => c.parent_id === parentId);
 
-  if (loading) return <p className="p-10 text-gray-400">Loading...</p>;
-  if (!story) return <p className="p-10 text-gray-400">Story not found.</p>;
+  if (loading) return <p className="p-10 text-[#8B907F]">Loading...</p>;
+  if (!story) return <p className="p-10 text-[#8B907F]">Story not found.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
-      <p className="text-sm text-gray-500 mb-2">{story.genre}</p>
-      <h1 className="text-4xl font-bold mb-3">{story.title}</h1>
-      {story.subtitle && <p className="text-xl text-gray-500 mb-6">{story.subtitle}</p>}
+    <div className="max-w-2xl mx-auto px-6 py-12 bg-[#FDFBF7] min-h-screen">
+      <p className="text-sm text-[#6A4A50] uppercase tracking-widest mb-2">{story.genre}</p>
+      <h1 className="text-4xl font-serif font-bold text-[#221A14] mb-3">{story.title}</h1>
+      {story.subtitle && <p className="text-xl text-[#8B907F] mb-6">{story.subtitle}</p>}
 
-      <div className="flex items-center justify-between border-b pb-6 mb-10">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-black transition">
+      <div className="flex items-center justify-between border-b border-[#DCD5C8] pb-6 mb-10">
+        <div className="flex items-center gap-2 text-sm text-[#8B907F]">
+          <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-[#4B1F24] transition">
             {story.profiles?.username || "Unknown"}
           </Link>
-          <span>·</span>
-          <span>{new Date(story.created_at).toLocaleDateString()}</span>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={handleLike} className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium transition ${liked ? "bg-red-50 border-red-200 text-red-500" : "bg-white border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-500"}`}>
+          <button onClick={handleLike} className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium transition ${liked ? "bg-[#F3E7E5] border-[#6A4A50]/30 text-[#4B1F24]" : "bg-white border-[#DCD5C8] text-[#8B907F] hover:border-[#6A4A50] hover:text-[#4B1F24]"}`}>
             <span>{liked ? "❤️" : "🤍"}</span>
             <span>{likeCount} {likeCount === 1 ? "Like" : "Likes"}</span>
           </button>
-          <button onClick={handleBookmark} className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium transition ${bookmarked ? "bg-gray-100 border-gray-300 text-black" : "bg-white border-gray-200 text-gray-500 hover:border-gray-400 hover:text-black"}`}>
+          <button onClick={handleBookmark} className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium transition ${bookmarked ? "bg-[#E9E4DA] border-[#6A4A50] text-[#221A14]" : "bg-white border-[#DCD5C8] text-[#8B907F] hover:border-[#6A4A50] hover:text-[#221A14]"}`}>
             <span>🔖</span>
             <span>{bookmarked ? "Saved" : "Save"}</span>
           </button>
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none mb-16" dangerouslySetInnerHTML={{ __html: story.content }} />
+      <div className="prose prose-lg max-w-none mb-16 text-[#221A14]" dangerouslySetInnerHTML={{ __html: story.content }} />
 
-      <div className="border-t pt-10">
-        <h2 className="text-xl font-bold mb-6">Comments ({comments.length})</h2>
+      <div className="border-t border-[#DCD5C8] pt-10">
+        <h2 className="text-xl font-serif font-bold text-[#4B1F24] mb-6">Comments ({comments.length})</h2>
 
         {user ? (
           <div className="mb-8 relative">
@@ -291,21 +289,21 @@ export default function StoryDetail() {
               onBlur={() => setTimeout(() => setMentionSuggestions([]), 150)}
               rows={3}
               placeholder="Write a comment... use @ to mention someone"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-black transition resize-none"
+              className="w-full border border-[#DCD5C8] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#6A4A50] transition resize-none bg-white text-[#221A14]"
             />
             {renderMentionDropdown(mentionSuggestions, newComment, setNewComment, setMentionSuggestions)}
-            <button onClick={handleComment} disabled={submitting} className="mt-2 bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition disabled:opacity-50">
+            <button onClick={handleComment} disabled={submitting} className="mt-2 bg-[#6A4A50] text-white px-5 py-2 rounded-full text-sm hover:bg-[#4B1F24] transition disabled:opacity-50">
               {submitting ? "Posting..." : "Post Comment"}
             </button>
           </div>
         ) : (
-          <p className="text-sm text-gray-400 mb-8">
-            <Link to="/login" className="underline hover:text-black">Login</Link> to leave a comment.
+          <p className="text-sm text-[#8B907F] mb-8">
+            <Link to="/login" className="underline hover:text-[#4B1F24]">Login</Link> to leave a comment.
           </p>
         )}
 
         {topLevelComments.length === 0 ? (
-          <p className="text-gray-400 text-sm">No comments yet. Be the first!</p>
+          <p className="text-[#8B907F] text-sm">No comments yet. Be the first!</p>
         ) : (
           <div className="flex flex-col gap-6">
             {topLevelComments.map((c) => (
@@ -313,13 +311,12 @@ export default function StoryDetail() {
                 <div className="flex gap-3">
                   {renderAvatar(c.profiles)}
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{c.profiles?.username || "Unknown"}</p>
-                    <p className="text-sm text-gray-600 mt-0.5">{renderCommentText(c.comment)}</p>
+                    <p className="text-sm font-medium text-[#221A14]">{c.profiles?.username || "Unknown"}</p>
+                    <p className="text-sm text-[#4B1F24] mt-0.5">{renderCommentText(c.comment)}</p>
                     <div className="flex items-center gap-3 mt-2">
-                      <p className="text-xs text-gray-400">{new Date(c.created_at).toLocaleDateString()}</p>
                       {renderCommentLikeButton(c.id)}
                       {user && (
-                        <button onClick={() => setReplyingTo(replyingTo === c.id ? null : c.id)} className="text-xs text-gray-400 hover:text-black transition">
+                        <button onClick={() => setReplyingTo(replyingTo === c.id ? null : c.id)} className="text-xs text-[#8B907F] hover:text-[#4B1F24] transition">
                           Reply
                         </button>
                       )}
@@ -333,14 +330,14 @@ export default function StoryDetail() {
                           onBlur={() => setTimeout(() => setReplyMentionSuggestions([]), 150)}
                           rows={2}
                           placeholder="Write a reply... use @ to mention"
-                          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-black transition resize-none"
+                          className="w-full border border-[#DCD5C8] rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#6A4A50] transition resize-none bg-white text-[#221A14]"
                         />
                         {renderMentionDropdown(replyMentionSuggestions, replyText, setReplyText, setReplyMentionSuggestions)}
                         <div className="flex gap-2 mt-1">
-                          <button onClick={() => handleReply(c.id)} disabled={submitting} className="bg-black text-white px-4 py-1.5 rounded-full text-xs hover:bg-gray-800 transition disabled:opacity-50">
+                          <button onClick={() => handleReply(c.id)} disabled={submitting} className="bg-[#6A4A50] text-white px-4 py-1.5 rounded-full text-xs hover:bg-[#4B1F24] transition disabled:opacity-50">
                             {submitting ? "Posting..." : "Reply"}
                           </button>
-                          <button onClick={() => setReplyingTo(null)} className="text-xs text-gray-400 hover:text-black transition">
+                          <button onClick={() => setReplyingTo(null)} className="text-xs text-[#8B907F] hover:text-[#4B1F24] transition">
                             Cancel
                           </button>
                         </div>
@@ -348,15 +345,14 @@ export default function StoryDetail() {
                     )}
 
                     {getReplies(c.id).length > 0 && (
-                      <div className="mt-4 flex flex-col gap-4 border-l-2 border-gray-100 pl-4">
+                      <div className="mt-4 flex flex-col gap-4 border-l-2 border-[#E9E4DA] pl-4">
                         {getReplies(c.id).map((reply) => (
                           <div key={reply.id} className="flex gap-3">
                             {renderAvatar(reply.profiles)}
                             <div className="flex-1">
-                              <p className="text-sm font-medium">{reply.profiles?.username || "Unknown"}</p>
-                              <p className="text-sm text-gray-600 mt-0.5">{renderCommentText(reply.comment)}</p>
+                              <p className="text-sm font-medium text-[#221A14]">{reply.profiles?.username || "Unknown"}</p>
+                              <p className="text-sm text-[#4B1F24] mt-0.5">{renderCommentText(reply.comment)}</p>
                               <div className="flex items-center gap-3 mt-2">
-                                <p className="text-xs text-gray-400">{new Date(reply.created_at).toLocaleDateString()}</p>
                                 {renderCommentLikeButton(reply.id)}
                               </div>
                             </div>

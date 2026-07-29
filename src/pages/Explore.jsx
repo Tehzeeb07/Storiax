@@ -21,11 +21,11 @@ const POPULAR_TAGS = [
 ];
 
 const BROWN_PLACEHOLDERS = [
-  "from-[#F5B98C] to-[#C94A26]",
-  "from-[#C94A26] to-[#5a4428]",
+  "from-[#8B907F] to-[#4B1F24]",
+  "from-[#4B1F24] to-[#5a4428]",
   "from-[#F0A868] to-[#D9713A]",
   "from-[#D9713A] to-[#A8481E]",
-  "from-[#FBE7D6] to-[#F5B98C]"
+  "from-[#E9E4DA] to-[#8B907F"
 ];
 
 export default function Explore() {
@@ -230,100 +230,168 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#2C221E] pb-20">
-      <div className="relative bg-gradient-to-br from-[#E85C33] via-[#C94A26] to-[#7A3010] py-16 px-6 text-white overflow-hidden shadow-lg">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#F5B98C_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div className="relative bg-gradient-to-br from-[#6A4A50] via-[#4B1F24] to-[#7A3010] py-24 px-6 text-white overflow-hidden shadow-lg">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#8B907F_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-        <div className="max-w-3xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#F0DFCB] text-xs font-medium mb-4 border border-white/10">
-            <Sparkles className="w-3.5 h-3.5 text-[#F5B98C]" /> Discover Community Masterpieces
+        <div className="max-w-2xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#DCD5C8] text-xs font-medium mb-4 border border-white/10">
+            <Sparkles className="w-3.5 h-3.5 text-[#8B907F]" /> Discover Community Masterpieces
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-wide mb-3 text-[#FBE7D6]">
+          <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-wide mb-3 text-[#E9E4DA]">
             Explore Endless Stories
           </h1>
-          <p className="text-[#F5B98C] text-sm md:text-base mb-8 max-w-lg mx-auto">
+          <p className="text-[#8B907F] text-sm md:text-base mb-1 max-w-lg mx-auto">
             Search through captivating books, poems, short stories, and brilliant writers.
           </p>
 
-          <div className="relative max-w-xl mx-auto" ref={searchRef}>
-            <div className="relative flex items-center">
-              <Search className="absolute left-5 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search stories, books, or writers..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-full pl-12 pr-6 py-4 text-sm bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-400 shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#F5B98C] transition-all"
-              />
-            </div>
+          <div className="relative max-w-2xl mx-auto" ref={searchRef}>
 
-            {showResults && (searchResults.stories.length > 0 || searchResults.users.length > 0) && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#F0DFCB] rounded-2xl shadow-2xl overflow-hidden z-50 text-left">
-                {searchResults.users.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold text-[#C94A26] uppercase tracking-widest px-4 pt-3 pb-1 bg-[#FBE7D6]/50">Writers</p>
-                    {searchResults.users.map((u) => (
-                      <Link
-                        key={u.id}
-                        to={`/profile/${u.id}`}
-                        onClick={() => { setShowResults(false); setSearch(""); }}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-[#FBE7D6] transition border-b border-gray-100 last:border-none"
-                      >
-                        <div className="w-9 h-9 rounded-full bg-[#F0DFCB] overflow-hidden flex items-center justify-center text-sm font-bold text-[#C94A26] shrink-0 shadow-inner">
-                          {u.avatar_url ? (
-                            <img src={u.avatar_url} alt="avatar" className="w-full h-full object-cover" />
-                          ) : (
-                            u.full_name?.charAt(0) || <User className="w-4 h-4" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-[#E85C33]">{u.full_name || u.username}</p>
-                          <p className="text-xs text-[#C94A26]">@{u.username}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-                {searchResults.stories.length > 0 && (
-                  <div className={searchResults.users.length > 0 ? "border-t border-[#F0DFCB]" : ""}>
-                    <p className="text-xs font-bold text-[#C94A26] uppercase tracking-widest px-4 pt-3 pb-1 bg-[#FBE7D6]/50">Stories</p>
-                    {searchResults.stories.map((s) => (
-                      <Link
-                        key={s.id}
-                        to={`/story/${s.id}`}
-                        onClick={() => { setShowResults(false); setSearch(""); }}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-[#FBE7D6] transition border-b border-gray-100 last:border-none"
-                      >
-                        <div className="w-10 h-12 rounded-lg bg-[#FFFDF9] overflow-hidden shrink-0 shadow-sm border border-gray-200">
-                          {s.cover_image ? (
-                            <img src={s.cover_image} alt={s.title} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-[#F5B98C] to-[#C94A26] flex items-center justify-center">
-                              <span className="text-white text-xs">✦</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="overflow-hidden">
-                          <p className="text-sm font-semibold text-[#E85C33] truncate">{s.title}</p>
-                          <p className="text-xs text-[#C94A26]">by @{s.profiles?.username || "unknown"}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-[#6A4A50]/20 blur-3xl rounded-full scale-110"></div>
+
+            {/* Search Icon */}
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6A4A50] z-20" />
+
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search stories, books, writers..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="
+      relative
+      z-10
+      w-full
+      h-16
+      rounded-3xl
+      bg-white/75
+      backdrop-blur-2xl
+      border
+      border-white/40
+      shadow-[0_25px_80px_rgba(34,26,20,0.18)]
+      pl-16
+      pr-6
+      text-[16px]
+      font-medium
+      text-[#221A14]
+      placeholder:text-[#8B907F]
+      transition-all
+      duration-300
+      hover:bg-white/90
+      hover:shadow-[0_30px_90px_rgba(34,26,20,0.22)]
+      focus:outline-none
+      focus:ring-4
+      focus:ring-[#6A4A50]/15
+      focus:border-[#6A4A50]
+      focus:bg-white
+    "
+            />
+
+            {/* Search Results */}
+            {showResults &&
+              (searchResults.stories.length > 0 ||
+                searchResults.users.length > 0) && (
+
+                <div className="absolute top-full mt-5 left-0 right-0 z-50 overflow-hidden rounded-3xl border border-[#DCD5C8] bg-white/95 backdrop-blur-2xl shadow-[0_30px_80px_rgba(0,0,0,0.15)]">
+
+                  {searchResults.users.length > 0 && (
+                    <div>
+                      <div className="px-6 py-3 bg-[#E9E4DA] text-xs font-bold uppercase tracking-[3px] text-[#6A4A50]">
+                        Writers
+                      </div>
+
+                      {searchResults.users.map((u) => (
+                        <Link
+                          key={u.id}
+                          to={`/profile/${u.id}`}
+                          onClick={() => {
+                            setShowResults(false);
+                            setSearch("");
+                          }}
+                          className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition"
+                        >
+                          <div className="w-11 h-11 rounded-full overflow-hidden bg-[#DCD5C8] flex items-center justify-center">
+                            {u.avatar_url ? (
+                              <img
+                                src={u.avatar_url}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <User className="w-5 h-5 text-[#6A4A50]" />
+                            )}
+                          </div>
+
+                          <div>
+                            <p className="font-semibold text-[#221A14]">
+                              {u.full_name || u.username}
+                            </p>
+
+                            <p className="text-sm text-[#8B907F]">
+                              @{u.username}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  {searchResults.stories.length > 0 && (
+                    <>
+                      <div className="px-6 py-3 bg-[#E9E4DA] text-xs font-bold uppercase tracking-[3px] text-[#6A4A50] border-t border-[#DCD5C8]">
+                        Stories
+                      </div>
+
+                      {searchResults.stories.map((s) => (
+                        <Link
+                          key={s.id}
+                          to={`/story/${s.id}`}
+                          onClick={() => {
+                            setShowResults(false);
+                            setSearch("");
+                          }}
+                          className="flex items-center gap-4 px-6 py-4 hover:bg-[#FBF8F3] transition"
+                        >
+                          <div className="w-12 h-16 rounded-lg overflow-hidden bg-[#E9E4DA]">
+                            {s.cover_image ? (
+                              <img
+                                src={s.cover_image}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-[#6A4A50] to-[#221A14]" />
+                            )}
+                          </div>
+
+                          <div>
+                            <p className="font-semibold text-[#221A14]">
+                              {s.title}
+                            </p>
+
+                            <p className="text-sm text-[#8B907F]">
+                              @{s.profiles?.username}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </>
+                  )}
+
+                </div>
+              )}
           </div>
         </div>
       </div>
 
-      <div className="bg-[#FBE7D6] border-b border-[#F0DFCB] py-6 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 space-y-3">
+      <div className="bg-[#E9E4DA] border-b border-[#DCD5C8] py-6 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 space-y-3">
         <div className="max-w-6xl mx-auto flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveCategory("All")}
             className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
               activeCategory === "All"
-                ? "bg-[#E85C33] text-white shadow-md scale-105"
-                : "bg-white text-[#7A7488] border border-[#F0DFCB] hover:bg-[#FBE7D6]"
+                ? "bg-[#6A4A50] text-white shadow-md scale-105"
+                : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
             }`}
           >
             <Compass className="w-4 h-4" /> All Stories
@@ -337,8 +405,8 @@ export default function Explore() {
               }}
               className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
                 activeCategory === cat.name
-                  ? "bg-[#E85C33] text-white shadow-md scale-105"
-                  : "bg-white text-[#7A7488] border border-[#F0DFCB] hover:bg-[#FBE7D6]"
+                  ? "bg-[#6A4A50] text-white shadow-md scale-105"
+                  : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
               }`}
             >
               <span>{cat.emoji}</span> {cat.name}
@@ -354,7 +422,7 @@ export default function Explore() {
               className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
                 completionFilter === status
                   ? "bg-orange-600 text-white"
-                  : "bg-white text-[#C94A26] border border-[#F0DFCB] hover:bg-[#FBE7D6]"
+                  : "bg-white text-[#4B1F24] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
               }`}
             >
               {status}
@@ -363,13 +431,13 @@ export default function Explore() {
         </div>
 
         <div className="max-w-6xl mx-auto flex items-center gap-2 flex-wrap pt-1">
-          <Tag className="w-3.5 h-3.5 text-[#C94A26]" />
+          <Tag className="w-3.5 h-3.5 text-[#4B1F24]" />
           {POPULAR_TAGS.map((tag) => (
             <button
               key={tag}
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
               className={`px-3 py-1 rounded-full text-xs transition-all ${
-                activeTag === tag ? "bg-[#E85C33] text-white" : "bg-[#FBE7D6] text-[#C94A26] hover:bg-[#F0DFCB]"
+                activeTag === tag ? "bg-[#6A4A50] text-white" : "bg-[#E9E4DA] text-[#4B1F24] hover:bg-[#DCD5C8]"
               }`}
             >
               #{tag}
@@ -384,7 +452,7 @@ export default function Explore() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-orange-600" />
-              <h2 className="text-xl font-serif font-bold text-[#E85C33]">Continue Reading</h2>
+              <h2 className="text-xl font-serif font-bold text-[#6A4A50]">Continue Reading</h2>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2">
               {continueReading.map((item) => (
@@ -399,48 +467,246 @@ export default function Explore() {
                       <div className="h-full bg-orange-500" style={{ width: `${item.scroll_percent}%` }} />
                     </div>
                   </div>
-                  <p className="text-xs font-semibold text-[#E85C33] mt-2 truncate">{item.posts.title}</p>
-                  <p className="text-[10px] text-[#C94A26]">{item.scroll_percent}% read</p>
+                  <p className="text-xs font-semibold text-[#6A4A50] mt-2 truncate">{item.posts.title}</p>
+                  <p className="text-[10px] text-[#4B1F24]">{item.scroll_percent}% read</p>
                 </Link>
               ))}
             </div>
           </div>
         )}
 
-        {topWriters.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-orange-500" />
-              <h2 className="text-xl font-serif font-bold text-[#E85C33]">Top Writers This Week</h2>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {topWriters.map((w, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-[#F0DFCB] p-4 text-center shadow-sm relative">
-                  <span className="absolute top-2 left-2 text-[10px] font-bold text-orange-600 bg-orange-100 rounded-full w-5 h-5 flex items-center justify-center">
-                    {i + 1}
-                  </span>
-                  <div className="w-14 h-14 mx-auto rounded-full bg-[#F0DFCB] overflow-hidden flex items-center justify-center text-lg font-bold text-[#C94A26] mb-2">
-                    {w.profile?.avatar_url ? (
-                      <img src={w.profile.avatar_url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      w.profile?.full_name?.charAt(0) || "?"
-                    )}
-                  </div>
-                  <p className="text-xs font-semibold text-[#E85C33] truncate">{w.profile?.full_name || w.profile?.username}</p>
-                  <p className="text-[10px] text-[#C94A26]">{w.count} stories</p>
-                </div>
-              ))}
-            </div>
+        {/* Top Writers This Week */}
+        <section className="mt-16 px-6 max-w-6xl mx-auto">
+
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-xl">🏆</span>
+            <h2 className="text-2xl font-serif font-bold text-[#4B1F24]">
+              Top Writers This Week
+            </h2>
           </div>
-        )}
+
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            {/* 1st Writer */}
+            <div className="
+      relative
+      bg-white
+      border
+      border-[#E8DED2]
+      rounded-2xl
+      p-6
+      text-center
+      shadow-sm
+      hover:shadow-lg
+      transition
+    ">
+
+              <div className="
+        absolute
+        top-3
+        left-3
+        bg-[#F4E6C8]
+        text-[#8B5E34]
+        text-xs
+        font-bold
+        rounded-full
+        w-6
+        h-6
+        flex
+        items-center
+        justify-center
+      ">
+                1
+              </div>
+
+
+              <div className="
+        mx-auto
+        w-16
+        h-16
+        rounded-full
+        bg-[#EFE6D8]
+        flex
+        items-center
+        justify-center
+        text-2xl
+        font-bold
+        text-[#4B1F24]
+        mb-4
+      ">
+                Z
+              </div>
+
+
+              <h3 className="
+        text-base
+        font-bold
+        text-[#4B1F24]
+      ">
+                Zainab Afzal
+              </h3>
+
+              <p className="
+        text-sm
+        text-[#8B7B72]
+        mt-1
+      ">
+                6 stories
+              </p>
+
+            </div>
+
+
+
+            {/* 2nd Writer */}
+            <div className="
+      relative
+      bg-white
+      border
+      border-[#E8DED2]
+      rounded-2xl
+      p-6
+      text-center
+      shadow-sm
+      hover:shadow-lg
+      transition
+    ">
+
+              <div className="
+        absolute
+        top-3
+        left-3
+        bg-[#E5E7EB]
+        text-gray-600
+        text-xs
+        font-bold
+        rounded-full
+        w-6
+        h-6
+        flex
+        items-center
+        justify-center
+      ">
+                2
+              </div>
+
+
+              <img
+                src="/avatar.png"
+                className="
+          mx-auto
+          w-16
+          h-16
+          rounded-full
+          object-cover
+          mb-4
+        "
+              />
+
+
+              <h3 className="
+        text-base
+        font-bold
+        text-[#4B1F24]
+      ">
+                Tehzebbbb
+              </h3>
+
+              <p className="
+        text-sm
+        text-[#8B7B72]
+        mt-1
+      ">
+                3 stories
+              </p>
+
+            </div>
+
+
+
+            {/* 3rd Writer */}
+            <div className="
+      relative
+      bg-white
+      border
+      border-[#E8DED2]
+      rounded-2xl
+      p-6
+      text-center
+      shadow-sm
+      hover:shadow-lg
+      transition
+    ">
+
+
+              <div className="
+        absolute
+        top-3
+        left-3
+        bg-[#F3D6C6]
+        text-[#8B4513]
+        text-xs
+        font-bold
+        rounded-full
+        w-6
+        h-6
+        flex
+        items-center
+        justify-center
+      ">
+                3
+              </div>
+
+
+              <div className="
+        mx-auto
+        w-16
+        h-16
+        rounded-full
+        bg-[#EFE6D8]
+        flex
+        items-center
+        justify-center
+        text-2xl
+        font-bold
+        text-[#4B1F24]
+        mb-4
+      ">
+                M
+              </div>
+
+
+              <h3 className="
+        text-base
+        font-bold
+        text-[#4B1F24]
+      ">
+                maliar
+              </h3>
+
+              <p className="
+        text-sm
+        text-[#8B7B72]
+        mt-1
+      ">
+                1 story
+              </p>
+
+            </div>
+
+
+          </div>
+
+        </section>
 
         {recommended.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-orange-500" />
-              <h2 className="text-xl font-serif font-bold text-[#E85C33]">Just For You</h2>
+              <h2 className="text-xl font-serif font-bold text-bg-[#6A4A50] text-white">Just For You</h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {recommended.map((story) => (
                 <StoryCircleCard key={story.id} story={story} bookmarkedIds={bookmarkedIds} toggleBookmark={toggleBookmark} />
               ))}
@@ -450,13 +716,13 @@ export default function Explore() {
 
         {activeCategory === "All" && !search && (
           <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-[#F0DFCB] pb-3">
+            <div className="flex items-center gap-2 border-b border-[#DCD5C8] pb-3">
               <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
                 <Flame className="w-5 h-5 fill-amber-500 text-orange-500" />
               </div>
               <div>
-                <h2 className="text-xl font-serif font-bold text-[#E85C33]">Trending Right Now</h2>
-                <p className="text-xs text-[#C94A26]">Most loved and read stories by the community</p>
+                <h2 className="text-xl font-serif font-bold text-bg-[#6A4A50] text-white">Trending Right Now</h2>
+                <p className="text-xs text-[#4B1F24]">Most loved and read stories by the community</p>
               </div>
             </div>
 
@@ -467,7 +733,7 @@ export default function Explore() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                 {trending.map((story, index) => (
                   <StoryCircleCard key={story.id} story={story} index={index} bookmarkedIds={bookmarkedIds} toggleBookmark={toggleBookmark} showLikes />
                 ))}
@@ -477,17 +743,17 @@ export default function Explore() {
         )}
 
         <div id="stories-section" className="space-y-6 pt-4">
-          <div className="flex items-center justify-between border-b border-[#F0DFCB] pb-3">
+          <div className="flex items-center justify-between border-b border-[#DCD5C8] pb-3">
             <div>
-              <h2 className="text-xl font-serif font-bold text-[#E85C33]">
+              <h2 className="text-xl font-serif font-bold text-bg-[#6A4A50] text-white">
                 {activeCategory === "All" ? "All Stories" : `${activeCategory} Stories`}
               </h2>
-              <p className="text-xs text-[#C94A26]">Explore creations filtered by genre</p>
+              <p className="text-xs text-[#4B1F24]">Explore creations filtered by genre</p>
             </div>
             {(activeCategory !== "All" || completionFilter !== "All" || activeTag) && (
               <button
                 onClick={() => { setActiveCategory("All"); setCompletionFilter("All"); setActiveTag(null); }}
-                className="text-xs font-medium text-[#C94A26] bg-white border border-[#F0DFCB] px-3.5 py-1.5 rounded-full hover:bg-[#FBE7D6] transition shadow-sm"
+                className="text-xs font-medium text-[#4B1F24] bg-white border border-[#DCD5C8] px-3.5 py-1.5 rounded-full hover:bg-[#E9E4DA] transition shadow-sm"
               >
                 Clear filters ✕
               </button>
@@ -495,24 +761,24 @@ export default function Explore() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="h-56 bg-gray-100 animate-pulse rounded-full"></div>
               ))}
             </div>
           ) : stories.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-[#F0DFCB] space-y-3">
+            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-[#DCD5C8] space-y-3">
               <div className="text-3xl">📭</div>
               <p className="text-sm font-medium text-gray-600">No stories found with these filters yet.</p>
               <button
                 onClick={() => { setActiveCategory("All"); setCompletionFilter("All"); setActiveTag(null); }}
-                className="text-xs text-[#C94A26] underline hover:text-[#E85C33] font-semibold"
+                className="text-xs text-[#4B1F24] underline hover:text-[#6A4A50] font-semibold"
               >
                 Clear filters
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
               {stories.map((story, index) => (
                 <StoryCircleCard key={story.id} story={story} index={index} bookmarkedIds={bookmarkedIds} toggleBookmark={toggleBookmark} />
               ))}
@@ -528,50 +794,81 @@ function StoryCircleCard({ story, index = 0, bookmarkedIds, toggleBookmark, show
   const isBookmarked = bookmarkedIds.has(story.id);
 
   return (
-    <Link to={`/story/${story.id}`} className="group flex flex-col items-center text-center">
-      <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden bg-[#FFFDF9] shadow-md border-4 border-white ring-1 ring-[#F0DFCB] mb-3">
-        {story.cover_image ? (
-          <img
-            src={story.cover_image}
-            alt={story.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-          />
-        ) : (
-          <div className={`w-full h-full bg-gradient-to-br ${BROWN_PLACEHOLDERS[index % 5]} flex items-center justify-center`}>
-            <span className="text-white text-2xl opacity-40">✦</span>
+    <div className="group">
+      <Link to={`/story/${story.id}`}>
+
+        <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-[#FBF8F3] shadow-md border border-[#DCD5C8]">
+
+          {story.cover_image ? (
+            <img
+              src={story.cover_image}
+              alt={story.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#6A4A50] to-[#221A14] flex items-center justify-center">
+              <span className="text-white text-3xl opacity-40">
+                ✦
+              </span>
+            </div>
+          )}
+
+          <button
+            onClick={(e)=>toggleBookmark(e, story.id)}
+            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition ${
+              isBookmarked
+              ? "bg-[#6A4A50] text-white"
+              : "bg-white/90 text-[#6A4A50]"
+            }`}
+          >
+            <Bookmark
+              className="w-4 h-4"
+              fill={isBookmarked ? "currentColor":"none"}
+            />
+          </button>
+
+        </div>
+
+
+        <h3 className="mt-3 text-sm font-bold text-[#221A14] line-clamp-1">
+          {story.title}
+        </h3>
+
+
+        <p className="text-xs text-[#8B907F] truncate">
+          by @{story.profiles?.username || "unknown"}
+        </p>
+
+
+        {showLikes && (
+          <div className="flex gap-3 mt-2 text-xs text-[#8B907F]">
+
+            <span className="flex items-center gap-1">
+              <BookOpen className="w-3 h-3"/>
+              {story.view_count || 0}
+            </span>
+
+
+            <span className="flex items-center gap-1 text-[#6A4A50]">
+              <Heart className="w-3 h-3 fill-current"/>
+              {story.likeCount || 0}
+            </span>
+
           </div>
         )}
 
-        <button
-          onClick={(e) => toggleBookmark(e, story.id)}
-          className={`absolute top-1.5 right-1.5 w-7 h-7 rounded-full flex items-center justify-center shadow-md transition ${
-            isBookmarked ? "bg-orange-500 text-white" : "bg-white/90 text-[#C94A26] hover:bg-white"
-          }`}
-          title={isBookmarked ? "Remove from reading list" : "Save for later"}
-        >
-          <Bookmark className="w-3.5 h-3.5" fill={isBookmarked ? "currentColor" : "none"} />
-        </button>
-      </div>
 
-      <h3 className="text-sm font-serif font-bold text-[#E85C33] line-clamp-1 group-hover:text-orange-700 transition max-w-[140px]">
-        {story.title}
-      </h3>
-      <p className="text-[11px] text-[#C94A26] truncate max-w-[140px]">
-        by @{story.profiles?.username || "unknown"}
-      </p>
+      </Link>
 
-      {showLikes && (
-        <div className="flex items-center gap-3 text-[11px] text-gray-500 mt-1">
-          <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> {story.view_count || 0}</span>
-          <span className="flex items-center gap-1 text-rose-600 font-medium">
-            <Heart className="w-3 h-3 fill-rose-600" /> {story.likeCount || 0}
-          </span>
-        </div>
-      )}
 
-      <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-white bg-orange-600 px-4 py-1.5 rounded-full group-hover:bg-orange-700 transition">
-        Read Now <ArrowRight className="w-3 h-3" />
-      </span>
-    </Link>
+      <Link
+        to={`/story/${story.id}`}
+        className="mt-3 flex items-center justify-center gap-1 w-full text-xs font-medium bg-[#6A4A50] text-white py-2 rounded-lg hover:bg-[#4B1F24] transition"
+      >
+        Read Now
+        <ArrowRight className="w-3 h-3"/>
+      </Link>
+
+    </div>
   );
 }

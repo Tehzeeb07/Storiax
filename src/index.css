@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+:root {
+  --olive: #4B5A3A;
+  --thicket: #8B907F;
+  --deep-mauve: #6A4A50;
+  --burgundy: #4B1F24;
+  --claret: #381015;
+  --chocolate: #4A2E1F;
+  --espresso: #221A14;
+  --cream: #F5F0E8;
+}
