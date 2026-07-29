@@ -121,3 +121,13 @@ export async function unbookmarkPost(postId, userId) {
     .eq("user_id", userId);
   if (error) throw error;
 }
+export async function getPublishedStories() {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, title, subtitle, cover_image, genre, author_id, created_at, profiles(full_name, username)")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return { data, error: null };
+}
