@@ -1,211 +1,372 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "../services/supabase";
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { createDraft, publishStory } from '../services/postService'
 
-import EditorTitle from "../components/editor/EditorTitle";
-import EditorSubtitle from "../components/editor/EditorSubtitle";
-import EditorGenre from "../components/editor/EditorGenre";
-import EditorCoverImage from "../components/editor/EditorCoverImage";
-import EditorContent from "../components/editor/EditorContent";
-import EditorActions from "../components/editor/EditorActions";
+const GENRES = ['Thriller', 'Romance', 'Fantasy', 'Poetry', 'Horror', 'Mystery', 'Fiction']
 
-function Editor() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(!!id);
-  const [postType, setPostType] = useState("story");
-  const [hasChapters, setHasChapters] = useState(false);
-  const [chapters, setChapters] = useState([{ title: "Chapter 1", content: "" }]);
-  const [story, setStory] = useState({
-    title: "",
-    subtitle: "",
-    genre: "Thriller",
-    content: "",
-    coverImage: null,
-  });
+export default function Editor() {
+  const navigate = useNavigate()
+  const contentRef = useRef(null)
+
+  const [postType, setPostType] = useState('story') // 'story' | 'poem'
+  const [title, setTitle] = useState('')
+  const [subtitle, setSubtitle] = useState('')
+  const [genre, setGenre] = useState(GENRES[0])
+  const [coverImage, setCoverImage] = useState(null)
+  const [hasChapters, setHasChapters] = useState(false)
+  const [chapterTitle, setChapterTitle] = useState('')
+  const [content, setContent] = useState('')
+
+  // ---- New feature state ----
+  const [tags, setTags] = useState([])
+  const [tagInput, setTagInput] = useState('')
+  const [ageRating, setAgeRating] = useState('Everyone') // 'Everyone' | 'Mature (18+)'
+  const [previewMode, setPreviewMode] = useState(false)
+  const [scheduleDate, setScheduleDate] = useState('')
+  const [autoSaveStatus, setAutoSaveStatus] = useState('')
+  const [wordCount, setWordCount] = useState(0)
+  const [charCount, setCharCount] = useState(0)
+  const [saving, setSaving] = useState(false)
+
+  // ---- Rich text formatting ----
+  function format(command) {
+    document.execCommand(command, false, null)
+    contentRef.current?.focus()
+  }
+
+  function handleContentInput() {
+    const html = contentRef.current.innerHTML
+    const text = contentRef.current.innerText || ''
+    setContent(html)
+    setWordCount(text.trim() ? text.trim().split(/\s+/).length : 0)
+    setCharCount(text.length)
+  }
+
+  // ---- Tags ----
+  function handleTagKeyDown(e) {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault()
+      if (!tags.includes(tagInput.trim())) {
+        setTags([...tags, tagInput.trim().replace(/^#/, '')])
+      }
+      setTagInput('')
+    }
+  }
+  function removeTag(tag) {
+    setTags(tags.filter((t) => t !== tag))
+  }
+
+  // ---- Auto-save draft every 30 seconds ----
+  const buildStoryPayload = useCallback(() => ({
+    title,
+    subtitle,
+    genre,
+    content,
+    coverImage,
+    tags,
+    ageRating,
+  }), [title, subtitle, genre, content, coverImage, tags, ageRating])
 
   useEffect(() => {
-    if (!id) return;
-
-    async function fetchPost() {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-      if (!error) {
-        setPostType(data.post_type || "story");
-        setHasChapters(data.has_chapters || false);
-        setStory({
-          title: data.title,
-          subtitle: data.subtitle,
-          genre: data.genre,
-          content: data.content,
-          coverImage: null,
-          existingCoverImage: data.cover_image,
-        });
-
-        if (data.has_chapters) {
-          const { data: chaptersData } = await supabase
-            .from("chapters")
-            .select("*")
-            .eq("post_id", id)
-            .order("order_index", { ascending: true });
-          if (chaptersData && chaptersData.length > 0) {
-            setChapters(chaptersData.map((c) => ({ title: c.title, content: c.content })));
-          }
-        }
+    const interval = setInterval(async () => {
+      if (!title.trim() && !content.trim()) return
+      try {
+        await createDraft(buildStoryPayload(), postType, hasChapters)
+        setAutoSaveStatus(`Draft saved at ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+      } catch {
+        setAutoSaveStatus('Auto-save failed — check your connection')
       }
-      setLoading(false);
+    }, 30000)
+    return () => clearInterval(interval)
+  }, [buildStoryPayload, postType, hasChapters, title, content])
+
+  async function handleSaveDraft() {
+    setSaving(true)
+    try {
+      await createDraft(buildStoryPayload(), postType, hasChapters)
+      setAutoSaveStatus(`Draft saved at ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+    } finally {
+      setSaving(false)
     }
-
-    fetchPost();
-  }, [id]);
-
-  function addChapter() {
-    setChapters([...chapters, { title: `Chapter ${chapters.length + 1}`, content: "" }]);
   }
 
-  function removeChapter(index) {
-    if (chapters.length === 1) return;
-    setChapters(chapters.filter((_, i) => i !== index));
+  async function handlePublish() {
+    setSaving(true)
+    try {
+      await publishStory(buildStoryPayload(), postType, hasChapters)
+      navigate('/dashboard')
+    } finally {
+      setSaving(false)
+    }
   }
-
-  function updateChapter(index, field, value) {
-    const updated = [...chapters];
-    updated[index][field] = value;
-    setChapters(updated);
-  }
-
-  if (loading) return <p className="p-10 text-gray-400">Loading...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-6">
-      <h1 className="text-4xl font-bold mb-8">
-        {id ? "✏️ Edit" : "✍️ Write"}
-      </h1>
+    <div style={{ background: 'var(--color-cream)', minHeight: '100vh', padding: '48px 24px' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
 
-      {/* Post Type Selector */}
-      {!id && (
-        <div className="flex gap-3 mb-8">
-          <button
-            onClick={() => setPostType("story")}
-            className={`px-5 py-2 rounded-full text-sm font-medium border transition ${
-              postType === "story"
-                ? "bg-black text-white border-black"
-                : "bg-white text-gray-600 border-gray-300 hover:border-black"
-            }`}
-          >
-            Story
-          </button>
-          <button
-            onClick={() => setPostType("poem")}
-            className={`px-5 py-2 rounded-full text-sm font-medium border transition ${
-              postType === "poem"
-                ? "bg-black text-white border-black"
-                : "bg-white text-gray-600 border-gray-300 hover:border-black"
-            }`}
-          >
-            Poem
-          </button>
+        <h1 style={{ fontSize: '28px', marginBottom: '4px' }}>✍️ Write</h1>
+        {autoSaveStatus && (
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>
+            {autoSaveStatus}
+          </p>
+        )}
+
+        {/* Story / Poem toggle */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '28px' }}>
+          {['story', 'poem'].map((type) => (
+            <button
+              key={type}
+              onClick={() => setPostType(type)}
+              style={{
+                padding: '8px 22px',
+                borderRadius: '999px',
+                border: `1px solid ${postType === type ? 'var(--color-rose)' : 'var(--color-border)'}`,
+                background: postType === type ? 'var(--color-rose)' : 'var(--color-white)',
+                color: postType === type ? 'var(--color-white)' : 'var(--color-text)',
+                fontWeight: 600,
+                fontSize: '13px',
+                cursor: 'pointer',
+                textTransform: 'capitalize'
+              }}
+            >
+              {type}
+            </button>
+          ))}
         </div>
-      )}
 
-      <EditorTitle
-        value={story.title}
-        onChange={(e) => setStory({ ...story, title: e.target.value })}
-        postType={postType}
-      />
-      <EditorSubtitle
-        value={story.subtitle}
-        onChange={(e) => setStory({ ...story, subtitle: e.target.value })}
-      />
-      <EditorGenre
-        value={story.genre}
-        onChange={(e) => setStory({ ...story, genre: e.target.value })}
-      />
-      <EditorCoverImage
-        onChange={(e) => setStory({ ...story, coverImage: e.target.files[0] })}
-      />
-
-      {/* Story with or without chapters */}
-      {postType === "story" && (
-        <div className="mb-6">
-          <label className="flex items-center gap-2 text-sm text-gray-600 mb-4 cursor-pointer">
+        {!previewMode ? (
+          <>
+            {/* Title */}
+            <label style={fieldLabel}>Title</label>
             <input
-              type="checkbox"
-              checked={hasChapters}
-              onChange={(e) => setHasChapters(e.target.checked)}
-              className="w-4 h-4"
+              className="input-field"
+              placeholder="Enter your story title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ marginBottom: '20px' }}
             />
-            Divide into chapters
-          </label>
 
-          {hasChapters ? (
-            <div className="flex flex-col gap-8">
-              {chapters.map((chapter, index) => (
-                <div key={index} className="border border-gray-200 rounded-xl p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <input
-                      type="text"
-                      value={chapter.title}
-                      onChange={(e) => updateChapter(index, "title", e.target.value)}
-                      className="text-lg font-semibold border-b border-gray-200 focus:outline-none focus:border-black w-full mr-4 pb-1"
-                    />
-                    {chapters.length > 1 && (
-                      <button
-                        onClick={() => removeChapter(index)}
-                        className="text-red-400 hover:text-red-600 text-sm shrink-0"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                  <textarea
-                    value={chapter.content}
-                    onChange={(e) => updateChapter(index, "content", e.target.value)}
-                    rows={10}
-                    placeholder="Write this chapter..."
-                    className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-black transition resize-none"
-                  />
-                </div>
+            {/* Subtitle */}
+            <label style={fieldLabel}>Subtitle</label>
+            <input
+              className="input-field"
+              placeholder="Add a short description..."
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
+              style={{ marginBottom: '20px' }}
+            />
+
+            {/* Genre */}
+            <label style={fieldLabel}>Genre</label>
+            <select
+              className="input-field"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              style={{ marginBottom: '20px' }}
+            >
+              {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
+            </select>
+
+            {/* Age rating */}
+            <label style={fieldLabel}>Audience</label>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+              {['Everyone', 'Mature (18+)'].map((rating) => (
+                <button
+                  key={rating}
+                  onClick={() => setAgeRating(rating)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: 'var(--radius-md)',
+                    border: `1px solid ${ageRating === rating ? 'var(--color-rose)' : 'var(--color-border)'}`,
+                    background: ageRating === rating ? 'var(--color-rose-light)' : 'var(--color-white)',
+                    color: 'var(--color-text)',
+                    fontSize: '13px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {rating}
+                </button>
               ))}
-              <button
-                onClick={addChapter}
-                className="text-sm text-gray-500 hover:text-black border border-dashed border-gray-300 rounded-xl py-3 transition"
-              >
-                + Add Chapter
-              </button>
             </div>
-          ) : (
-              <EditorContent
-                value={story.content}
-                onChange={(e) => setStory({ ...story, content: e.target.value })}
-                postType={postType}
+
+            {/* Tags */}
+            <label style={fieldLabel}>Tags & Keywords</label>
+            <div className="input-field" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '20px' }}>
+              {tags.map((tag) => (
+                <span key={tag} style={{
+                  background: 'var(--color-rose-light)', color: 'var(--color-mauve)',
+                  padding: '4px 10px', borderRadius: '999px', fontSize: '12px',
+                  display: 'flex', alignItems: 'center', gap: '6px'
+                }}>
+                  #{tag}
+                  <span onClick={() => removeTag(tag)} style={{ cursor: 'pointer', fontWeight: 700 }}>×</span>
+                </span>
+              ))}
+              <input
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+                placeholder="Type a tag and press Enter (e.g. dark-romance)"
+                style={{ border: 'none', outline: 'none', flex: 1, minWidth: '160px', fontSize: '13px', fontFamily: 'var(--font-body)' }}
               />
-          )}
+            </div>
+
+            {/* Cover image */}
+            <label style={fieldLabel}>Cover Image</label>
+            <div style={{ marginBottom: '24px' }}>
+              <input
+                type="file"
+                accept="image/*"
+                id="cover-upload"
+                style={{ display: 'none' }}
+                onChange={(e) => setCoverImage(e.target.files[0])}
+              />
+              <label htmlFor="cover-upload" className="btn-outline" style={{ display: 'inline-block' }}>
+                {coverImage ? coverImage.name : 'Upload Cover Image'}
+              </label>
+            </div>
+
+            {/* Chapters toggle */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontSize: '14px' }}>
+              <input type="checkbox" checked={hasChapters} onChange={(e) => setHasChapters(e.target.checked)} />
+              Divide into chapters
+            </label>
+
+            {hasChapters && (
+              <>
+                <label style={fieldLabel}>Chapter Title</label>
+                <input
+                  className="input-field"
+                  placeholder="Enter your chapter title..."
+                  value={chapterTitle}
+                  onChange={(e) => setChapterTitle(e.target.value)}
+                  style={{ marginBottom: '20px' }}
+                />
+              </>
+            )}
+
+            {/* Rich text toolbar */}
+            <label style={fieldLabel}>Content</label>
+            <div style={{
+              display: 'flex', gap: '4px', border: '1px solid var(--color-border)',
+              borderBottom: 'none', borderRadius: 'var(--radius-md) var(--radius-md) 0 0',
+              padding: '8px', background: 'var(--color-white)'
+            }}>
+              <ToolbarButton onClick={() => format('bold')} label="B" bold />
+              <ToolbarButton onClick={() => format('italic')} label="I" italic />
+              <ToolbarButton onClick={() => format('underline')} label="U" underline />
+              <ToolbarButton onClick={() => format('formatBlock', 'blockquote')} label="❝" />
+              <ToolbarButton onClick={() => format('insertUnorderedList')} label="• List" />
+              <ToolbarButton onClick={() => format('justifyLeft')} label="⯇" />
+              <ToolbarButton onClick={() => format('justifyCenter')} label="≡" />
+              <ToolbarButton onClick={() => format('justifyRight')} label="⯈" />
+            </div>
+            <div
+              ref={contentRef}
+              contentEditable
+              onInput={handleContentInput}
+              suppressContentEditableWarning
+              style={{
+                minHeight: '260px',
+                padding: '16px',
+                border: '1px solid var(--color-border)',
+                borderRadius: '0 0 var(--radius-md) var(--radius-md)',
+                background: 'var(--color-white)',
+                fontSize: '15px',
+                lineHeight: 1.7,
+                fontFamily: 'var(--font-body)'
+              }}
+              data-placeholder="Start writing..."
+            />
+            <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '8px 0 28px' }}>
+              {wordCount} words · {charCount} characters
+            </p>
+
+            {/* Schedule publish */}
+            <label style={fieldLabel}>Schedule Publication (optional)</label>
+            <input
+              type="datetime-local"
+              className="input-field"
+              value={scheduleDate}
+              onChange={(e) => setScheduleDate(e.target.value)}
+              style={{ marginBottom: '28px' }}
+            />
+          </>
+        ) : (
+          // ---- Preview mode ----
+          <div style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', padding: '32px', marginBottom: '28px' }}>
+            {coverImage && (
+              <img
+                src={URL.createObjectURL(coverImage)}
+                alt="cover"
+                style={{ width: '100%', maxHeight: '280px', objectFit: 'cover', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}
+              />
+            )}
+            <p style={{ fontSize: '11px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-mauve)' }}>{genre} · {ageRating}</p>
+            <h1 style={{ fontSize: '30px', margin: '6px 0' }}>{title || 'Untitled Story'}</h1>
+            {subtitle && <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', marginBottom: '16px' }}>{subtitle}</p>}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              {tags.map((tag) => (
+                <span key={tag} style={{ background: 'var(--color-rose-light)', color: 'var(--color-mauve)', padding: '3px 10px', borderRadius: '999px', fontSize: '11px' }}>#{tag}</span>
+              ))}
+            </div>
+            <div style={{ lineHeight: 1.8, fontSize: '15px' }} dangerouslySetInnerHTML={{ __html: content || '<p style="color:#999">Nothing written yet...</p>' }} />
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button className="btn-outline" onClick={() => setPreviewMode(!previewMode)}>
+            {previewMode ? '← Back to Editor' : '👁 Preview'}
+          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              onClick={handleSaveDraft}
+              disabled={saving}
+              style={{
+                background: 'var(--color-rose-light)', color: 'var(--color-mauve)', border: 'none',
+                padding: '12px 24px', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: '13px', cursor: 'pointer'
+              }}
+            >
+              Save Draft
+            </button>
+            <button className="btn-primary" onClick={handlePublish} disabled={saving}>
+              {scheduleDate ? 'Schedule Publish' : 'Publish'}
+            </button>
+          </div>
         </div>
-      )}
-
-      {/* Poem - single content box */}
-      {postType === "poem" && (
-        <EditorTitle
-          value={story.title}
-          onChange={(e) => setStory({ ...story, title: e.target.value })}
-          postType={postType}
-        />
-      )}
-
-      <EditorActions
-        story={story}
-        postId={id}
-        postType={postType}
-        hasChapters={hasChapters}
-        chapters={chapters}
-      />
+      </div>
     </div>
-  );
+  )
 }
 
-export default Editor;
+function ToolbarButton({ onClick, label, bold, italic, underline }) {
+  return (
+    <button
+      onClick={onClick}
+      type="button"
+      style={{
+        border: '1px solid var(--color-border)',
+        background: 'var(--color-cream)',
+        borderRadius: '4px',
+        padding: '6px 10px',
+        fontSize: '13px',
+        cursor: 'pointer',
+        fontWeight: bold ? 700 : 500,
+        fontStyle: italic ? 'italic' : 'normal',
+        textDecoration: underline ? 'underline' : 'none',
+        color: 'var(--color-text)'
+      }}
+    >
+      {label}
+    </button>
+  )
+}
+
+const fieldLabel = {
+  display: 'block',
+  fontSize: '13px',
+  fontWeight: 600,
+  color: 'var(--color-text)',
+  marginBottom: '6px'
+}
