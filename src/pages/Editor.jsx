@@ -1,343 +1,292 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { createDraft, publishStory } from '../services/postService'
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { createDraft, publishStory } from "../services/postService";
 
-const GENRES = ['Thriller', 'Romance', 'Fantasy', 'Poetry', 'Horror', 'Mystery', 'Fiction']
+const GENRES = ["Thriller", "Romance", "Fantasy", "Poetry", "Horror", "Mystery", "Fiction"];
 
 export default function Editor() {
-  const navigate = useNavigate()
-  const contentRef = useRef(null)
+  const navigate = useNavigate();
+  const contentRef = useRef(null);
 
-  const [postType, setPostType] = useState('story') // 'story' | 'poem'
-  const [title, setTitle] = useState('')
-  const [subtitle, setSubtitle] = useState('')
-  const [genre, setGenre] = useState(GENRES[0])
-  const [coverImage, setCoverImage] = useState(null)
-  const [hasChapters, setHasChapters] = useState(false)
-  const [chapterTitle, setChapterTitle] = useState('')
-  const [content, setContent] = useState('')
+  const [postType, setPostType] = useState("story");
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [genre, setGenre] = useState(GENRES[0]);
+  const [coverImage, setCoverImage] = useState(null);
+  const [hasChapters, setHasChapters] = useState(false);
+  const [chapterTitle, setChapterTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [ageRating, setAgeRating] = useState("Everyone");
+  const [previewMode, setPreviewMode] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+  const [charCount, setCharCount] = useState(0);
+  const [saving, setSaving] = useState(false);
 
-  // ---- New feature state ----
-  const [tags, setTags] = useState([])
-  const [tagInput, setTagInput] = useState('')
-  const [ageRating, setAgeRating] = useState('Everyone') // 'Everyone' | 'Mature (18+)'
-  const [previewMode, setPreviewMode] = useState(false)
-  const [scheduleDate, setScheduleDate] = useState('')
-  const [autoSaveStatus, setAutoSaveStatus] = useState('')
-  const [wordCount, setWordCount] = useState(0)
-  const [charCount, setCharCount] = useState(0)
-  const [saving, setSaving] = useState(false)
-
-  // ---- Rich text formatting ----
   function format(command) {
-    document.execCommand(command, false, null)
-    contentRef.current?.focus()
+    document.execCommand(command, false, null);
+    contentRef.current?.focus();
   }
 
   function handleContentInput() {
-    const html = contentRef.current.innerHTML
-    const text = contentRef.current.innerText || ''
-    setContent(html)
-    setWordCount(text.trim() ? text.trim().split(/\s+/).length : 0)
-    setCharCount(text.length)
+    const html = contentRef.current.innerHTML;
+    const text = contentRef.current.innerText || "";
+    setContent(html);
+    setWordCount(text.trim() ? text.trim().split(/\s+/).length : 0);
+    setCharCount(text.length);
   }
 
-  // ---- Tags ----
   function handleTagKeyDown(e) {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      e.preventDefault()
+    if (e.key === "Enter" && tagInput.trim()) {
+      e.preventDefault();
       if (!tags.includes(tagInput.trim())) {
-        setTags([...tags, tagInput.trim().replace(/^#/, '')])
+        setTags([...tags, tagInput.trim().replace(/^#/, "")]);
       }
-      setTagInput('')
+      setTagInput("");
     }
   }
+
   function removeTag(tag) {
-    setTags(tags.filter((t) => t !== tag))
+    setTags(tags.filter((t) => t !== tag));
   }
 
-  // ---- Auto-save draft every 30 seconds ----
-  const buildStoryPayload = useCallback(() => ({
-    title,
-    subtitle,
-    genre,
-    content,
-    coverImage,
-    tags,
-    ageRating,
-  }), [title, subtitle, genre, content, coverImage, tags, ageRating])
+  const buildStoryPayload = useCallback(
+    () => ({
+      title,
+      subtitle,
+      genre,
+      content,
+      coverImage,
+      tags,
+      ageRating,
+      chapterTitle,
+    }),
+    [title, subtitle, genre, content, coverImage, tags, ageRating, chapterTitle]
+  );
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      if (!title.trim() && !content.trim()) return
+      if (!title.trim() && !content.trim()) return;
       try {
-        await createDraft(buildStoryPayload(), postType, hasChapters)
-        setAutoSaveStatus(`Draft saved at ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+        await createDraft(buildStoryPayload(), postType, hasChapters);
+        setAutoSaveStatus(
+          `Draft saved at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+        );
       } catch {
-        setAutoSaveStatus('Auto-save failed — check your connection')
+        setAutoSaveStatus("Auto-save failed - check your connection");
       }
-    }, 30000)
-    return () => clearInterval(interval)
-  }, [buildStoryPayload, postType, hasChapters, title, content])
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [buildStoryPayload, postType, hasChapters, title, content]);
 
   async function handleSaveDraft() {
-    setSaving(true)
+    setSaving(true);
     try {
-      await createDraft(buildStoryPayload(), postType, hasChapters)
-      setAutoSaveStatus(`Draft saved at ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+      await createDraft(buildStoryPayload(), postType, hasChapters);
+      setAutoSaveStatus(
+        `Draft saved at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   async function handlePublish() {
-    setSaving(true)
+    setSaving(true);
     try {
-      await publishStory(buildStoryPayload(), postType, hasChapters)
-      navigate('/dashboard')
+      await publishStory(buildStoryPayload(), postType, hasChapters);
+      navigate("/dashboard");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   return (
-    <div style={{ background: 'var(--color-cream)', minHeight: '100vh', padding: '48px 24px' }}>
-      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-
-        <h1 style={{ fontSize: '28px', marginBottom: '4px' }}>✍️ Write</h1>
-        {autoSaveStatus && (
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>
-            {autoSaveStatus}
-          </p>
-        )}
-
-        {/* Story / Poem toggle */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '28px' }}>
-          {['story', 'poem'].map((type) => (
-            <button
-              key={type}
-              onClick={() => setPostType(type)}
-              style={{
-                padding: '8px 22px',
-                borderRadius: '999px',
-                border: `1px solid ${postType === type ? 'var(--color-rose)' : 'var(--color-border)'}`,
-                background: postType === type ? 'var(--color-rose)' : 'var(--color-white)',
-                color: postType === type ? 'var(--color-white)' : 'var(--color-text)',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: 'pointer',
-                textTransform: 'capitalize'
-              }}
-            >
-              {type}
+    <div className="min-h-screen px-6 py-12">
+      <div className="max-w-4xl mx-auto">
+        <div className="theme-panel rounded-[2rem] p-6 md:p-8">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#D6CABB] mb-3">Editor</p>
+              <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#F5F0E8] mb-2">Write</h1>
+              {autoSaveStatus && <p className="text-sm text-[#D6CABB]">{autoSaveStatus}</p>}
+            </div>
+            <button onClick={() => setPreviewMode(!previewMode)} className="btn-outline !text-[#F5F0E8] !border-[#D6CABB]">
+              {previewMode ? "Back to Editor" : "Preview"}
             </button>
-          ))}
-        </div>
-
-        {!previewMode ? (
-          <>
-            {/* Title */}
-            <label style={fieldLabel}>Title</label>
-            <input
-              className="input-field"
-              placeholder="Enter your story title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              style={{ marginBottom: '20px' }}
-            />
-
-            {/* Subtitle */}
-            <label style={fieldLabel}>Subtitle</label>
-            <input
-              className="input-field"
-              placeholder="Add a short description..."
-              value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
-              style={{ marginBottom: '20px' }}
-            />
-
-            {/* Genre */}
-            <label style={fieldLabel}>Genre</label>
-            <select
-              className="input-field"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              style={{ marginBottom: '20px' }}
-            >
-              {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
-            </select>
-
-            {/* Age rating */}
-            <label style={fieldLabel}>Audience</label>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-              {['Everyone', 'Mature (18+)'].map((rating) => (
-                <button
-                  key={rating}
-                  onClick={() => setAgeRating(rating)}
-                  style={{
-                    padding: '8px 18px',
-                    borderRadius: 'var(--radius-md)',
-                    border: `1px solid ${ageRating === rating ? 'var(--color-rose)' : 'var(--color-border)'}`,
-                    background: ageRating === rating ? 'var(--color-rose-light)' : 'var(--color-white)',
-                    color: 'var(--color-text)',
-                    fontSize: '13px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {rating}
-                </button>
-              ))}
-            </div>
-
-            {/* Tags */}
-            <label style={fieldLabel}>Tags & Keywords</label>
-            <div className="input-field" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '20px' }}>
-              {tags.map((tag) => (
-                <span key={tag} style={{
-                  background: 'var(--color-rose-light)', color: 'var(--color-mauve)',
-                  padding: '4px 10px', borderRadius: '999px', fontSize: '12px',
-                  display: 'flex', alignItems: 'center', gap: '6px'
-                }}>
-                  #{tag}
-                  <span onClick={() => removeTag(tag)} style={{ cursor: 'pointer', fontWeight: 700 }}>×</span>
-                </span>
-              ))}
-              <input
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={handleTagKeyDown}
-                placeholder="Type a tag and press Enter (e.g. dark-romance)"
-                style={{ border: 'none', outline: 'none', flex: 1, minWidth: '160px', fontSize: '13px', fontFamily: 'var(--font-body)' }}
-              />
-            </div>
-
-            {/* Cover image */}
-            <label style={fieldLabel}>Cover Image</label>
-            <div style={{ marginBottom: '24px' }}>
-              <input
-                type="file"
-                accept="image/*"
-                id="cover-upload"
-                style={{ display: 'none' }}
-                onChange={(e) => setCoverImage(e.target.files[0])}
-              />
-              <label htmlFor="cover-upload" className="btn-outline" style={{ display: 'inline-block' }}>
-                {coverImage ? coverImage.name : 'Upload Cover Image'}
-              </label>
-            </div>
-
-            {/* Chapters toggle */}
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontSize: '14px' }}>
-              <input type="checkbox" checked={hasChapters} onChange={(e) => setHasChapters(e.target.checked)} />
-              Divide into chapters
-            </label>
-
-            {hasChapters && (
-              <>
-                <label style={fieldLabel}>Chapter Title</label>
-                <input
-                  className="input-field"
-                  placeholder="Enter your chapter title..."
-                  value={chapterTitle}
-                  onChange={(e) => setChapterTitle(e.target.value)}
-                  style={{ marginBottom: '20px' }}
-                />
-              </>
-            )}
-
-            {/* Rich text toolbar */}
-            <label style={fieldLabel}>Content</label>
-            <div style={{
-              display: 'flex', gap: '4px', border: '1px solid var(--color-border)',
-              borderBottom: 'none', borderRadius: 'var(--radius-md) var(--radius-md) 0 0',
-              padding: '8px', background: 'var(--color-white)'
-            }}>
-              <ToolbarButton onClick={() => format('bold')} label="B" bold />
-              <ToolbarButton onClick={() => format('italic')} label="I" italic />
-              <ToolbarButton onClick={() => format('underline')} label="U" underline />
-              <ToolbarButton onClick={() => format('formatBlock', 'blockquote')} label="❝" />
-              <ToolbarButton onClick={() => format('insertUnorderedList')} label="• List" />
-              <ToolbarButton onClick={() => format('justifyLeft')} label="⯇" />
-              <ToolbarButton onClick={() => format('justifyCenter')} label="≡" />
-              <ToolbarButton onClick={() => format('justifyRight')} label="⯈" />
-            </div>
-            <div
-              ref={contentRef}
-              contentEditable
-              onInput={handleContentInput}
-              suppressContentEditableWarning
-              style={{
-                minHeight: '260px',
-                padding: '16px',
-                border: '1px solid var(--color-border)',
-                borderRadius: '0 0 var(--radius-md) var(--radius-md)',
-                background: 'var(--color-white)',
-                fontSize: '15px',
-                lineHeight: 1.7,
-                fontFamily: 'var(--font-body)'
-              }}
-              data-placeholder="Start writing..."
-            />
-            <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '8px 0 28px' }}>
-              {wordCount} words · {charCount} characters
-            </p>
-
-            {/* Schedule publish */}
-            <label style={fieldLabel}>Schedule Publication (optional)</label>
-            <input
-              type="datetime-local"
-              className="input-field"
-              value={scheduleDate}
-              onChange={(e) => setScheduleDate(e.target.value)}
-              style={{ marginBottom: '28px' }}
-            />
-          </>
-        ) : (
-          // ---- Preview mode ----
-          <div style={{ background: 'var(--color-white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', padding: '32px', marginBottom: '28px' }}>
-            {coverImage && (
-              <img
-                src={URL.createObjectURL(coverImage)}
-                alt="cover"
-                style={{ width: '100%', maxHeight: '280px', objectFit: 'cover', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}
-              />
-            )}
-            <p style={{ fontSize: '11px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-mauve)' }}>{genre} · {ageRating}</p>
-            <h1 style={{ fontSize: '30px', margin: '6px 0' }}>{title || 'Untitled Story'}</h1>
-            {subtitle && <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', marginBottom: '16px' }}>{subtitle}</p>}
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
-              {tags.map((tag) => (
-                <span key={tag} style={{ background: 'var(--color-rose-light)', color: 'var(--color-mauve)', padding: '3px 10px', borderRadius: '999px', fontSize: '11px' }}>#{tag}</span>
-              ))}
-            </div>
-            <div style={{ lineHeight: 1.8, fontSize: '15px' }} dangerouslySetInnerHTML={{ __html: content || '<p style="color:#999">Nothing written yet...</p>' }} />
           </div>
-        )}
 
-        {/* Action buttons */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button className="btn-outline" onClick={() => setPreviewMode(!previewMode)}>
-            {previewMode ? '← Back to Editor' : '👁 Preview'}
-          </button>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button
-              onClick={handleSaveDraft}
-              disabled={saving}
-              style={{
-                background: 'var(--color-rose-light)', color: 'var(--color-mauve)', border: 'none',
-                padding: '12px 24px', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: '13px', cursor: 'pointer'
-              }}
-            >
-              Save Draft
+          <div className="flex flex-wrap gap-3 mb-8">
+            {["story", "poem"].map((type) => (
+              <button
+                key={type}
+                onClick={() => setPostType(type)}
+                className={`px-5 py-2 rounded-full border text-sm font-medium capitalize transition ${
+                  postType === type
+                    ? "bg-[#4B1F24] border-[#4B1F24] text-white"
+                    : "bg-transparent border-[#D6CABB] text-[#F5F0E8] hover:bg-white/10"
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+
+          {!previewMode ? (
+            <div className="space-y-5">
+              <Field label="Title">
+                <input className="input-field !bg-[#F5F0E8]/10 !text-[#F5F0E8] !border-[#D6CABB]/30 placeholder:!text-[#D6CABB]" placeholder="Enter your story title..." value={title} onChange={(e) => setTitle(e.target.value)} />
+              </Field>
+              <Field label="Subtitle">
+                <input className="input-field !bg-[#F5F0E8]/10 !text-[#F5F0E8] !border-[#D6CABB]/30 placeholder:!text-[#D6CABB]" placeholder="Add a short description..." value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
+              </Field>
+              <Field label="Genre">
+                <select className="input-field !bg-[#F5F0E8]/10 !text-[#F5F0E8] !border-[#D6CABB]/30" value={genre} onChange={(e) => setGenre(e.target.value)}>
+                  {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </Field>
+              <Field label="Audience">
+                <div className="flex flex-wrap gap-2">
+                  {["Everyone", "Mature (18+)"].map((rating) => (
+                    <button
+                      key={rating}
+                      onClick={() => setAgeRating(rating)}
+                      className={`px-4 py-2 rounded-full border text-sm transition ${
+                        ageRating === rating
+                          ? "bg-[#E9E4DA] border-[#E9E4DA] text-[#221A14]"
+                          : "bg-transparent border-[#D6CABB] text-[#F5F0E8] hover:bg-white/10"
+                      }`}
+                    >
+                      {rating}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
+              <Field label="Tags & Keywords">
+                <div className="flex flex-wrap gap-2 items-center rounded-2xl border border-[#D6CABB]/30 bg-[#F5F0E8]/8 px-3 py-2">
+                  {tags.map((tag) => (
+                    <span key={tag} className="inline-flex items-center gap-2 rounded-full bg-[#E9E4DA] px-3 py-1 text-xs text-[#4A2E1F]">
+                      #{tag}
+                      <button type="button" onClick={() => removeTag(tag)} className="font-bold text-[#4B1F24]">×</button>
+                    </span>
+                  ))}
+                  <input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    placeholder="Type a tag and press Enter"
+                    className="flex-1 min-w-[180px] bg-transparent outline-none text-sm text-[#F5F0E8] placeholder:text-[#D6CABB]"
+                  />
+                </div>
+              </Field>
+
+              <Field label="Cover Image">
+                <div className="mb-1">
+                  <input type="file" accept="image/*" id="cover-upload" className="hidden" onChange={(e) => setCoverImage(e.target.files[0])} />
+                  <label htmlFor="cover-upload" className="inline-flex cursor-pointer rounded-full border border-[#D6CABB] px-4 py-2 text-sm text-[#F5F0E8] hover:bg-white/10 transition">
+                    {coverImage ? coverImage.name : "Upload Cover Image"}
+                  </label>
+                </div>
+              </Field>
+
+              <label className="flex items-center gap-3 text-sm text-[#F5F0E8]">
+                <input type="checkbox" checked={hasChapters} onChange={(e) => setHasChapters(e.target.checked)} />
+                Divide into chapters
+              </label>
+
+              {hasChapters && (
+                <Field label="Chapter Title">
+                  <input className="input-field !bg-[#F5F0E8]/10 !text-[#F5F0E8] !border-[#D6CABB]/30 placeholder:!text-[#D6CABB]" placeholder="Enter your chapter title..." value={chapterTitle} onChange={(e) => setChapterTitle(e.target.value)} />
+                </Field>
+              )}
+
+              <Field label="Content">
+                <div className="overflow-hidden rounded-2xl border border-[#D6CABB]/30">
+                  <div className="flex flex-wrap gap-2 border-b border-[#D6CABB]/20 bg-[#221A14]/40 p-3">
+                    <ToolbarButton onClick={() => format("bold")} label="B" bold />
+                    <ToolbarButton onClick={() => format("italic")} label="I" italic />
+                    <ToolbarButton onClick={() => format("underline")} label="U" underline />
+                    <ToolbarButton onClick={() => format("insertUnorderedList")} label="• List" />
+                    <ToolbarButton onClick={() => format("justifyLeft")} label="Left" />
+                    <ToolbarButton onClick={() => format("justifyCenter")} label="Center" />
+                    <ToolbarButton onClick={() => format("justifyRight")} label="Right" />
+                  </div>
+                  <div
+                    ref={contentRef}
+                    contentEditable
+                    onInput={handleContentInput}
+                    suppressContentEditableWarning
+                    className="min-h-[260px] bg-[#221A14]/45 p-4 text-[#F5F0E8] outline-none"
+                    data-placeholder="Start writing..."
+                  />
+                </div>
+                <p className="mt-2 text-xs text-[#D6CABB]">
+                  {wordCount} words · {charCount} characters
+                </p>
+              </Field>
+            </div>
+          ) : (
+            <div className="rounded-[1.75rem] border border-[#D6CABB]/25 bg-[#221A14]/45 p-6 mb-8">
+              {coverImage && (
+                <img
+                  src={URL.createObjectURL(coverImage)}
+                  alt="cover"
+                  className="mb-5 w-full max-h-[320px] rounded-2xl object-cover"
+                />
+              )}
+              <p className="text-xs uppercase tracking-[0.25em] text-[#D6CABB]">
+                {genre} · {ageRating}
+              </p>
+              <h2 className="mt-2 text-3xl font-serif text-[#F5F0E8]">{title || "Untitled Story"}</h2>
+              {subtitle && <p className="mt-2 text-[#D6CABB] italic">{subtitle}</p>}
+              <div className="mt-4 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <span key={tag} className="rounded-full bg-[#E9E4DA] px-3 py-1 text-xs text-[#4A2E1F]">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <div className="prose prose-invert max-w-none mt-6" dangerouslySetInnerHTML={{ __html: content || "<p>Nothing written yet...</p>" }} />
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+            <button onClick={() => setPreviewMode(!previewMode)} className="btn-outline !text-[#F5F0E8] !border-[#D6CABB] w-full sm:w-auto">
+              {previewMode ? "Back to Editor" : "Preview"}
             </button>
-            <button className="btn-primary" onClick={handlePublish} disabled={saving}>
-              {scheduleDate ? 'Schedule Publish' : 'Publish'}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleSaveDraft}
+                disabled={saving}
+                className="rounded-full border border-[#D6CABB] px-5 py-3 text-sm font-medium text-[#F5F0E8] hover:bg-white/10 transition disabled:opacity-60"
+              >
+                Save Draft
+              </button>
+              <button
+                onClick={handlePublish}
+                disabled={saving}
+                className="rounded-full bg-[#4B1F24] px-5 py-3 text-sm font-medium text-white hover:bg-[#381015] transition shadow-sm disabled:opacity-60"
+              >
+                Publish
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+function Field({ label, children }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-medium text-[#F5F0E8]">{label}</label>
+      {children}
+    </div>
+  );
 }
 
 function ToolbarButton({ onClick, label, bold, italic, underline }) {
@@ -345,28 +294,14 @@ function ToolbarButton({ onClick, label, bold, italic, underline }) {
     <button
       onClick={onClick}
       type="button"
+      className="rounded-md border border-[#D6CABB]/30 bg-white/5 px-3 py-1.5 text-sm text-[#F5F0E8] hover:bg-white/10 transition"
       style={{
-        border: '1px solid var(--color-border)',
-        background: 'var(--color-cream)',
-        borderRadius: '4px',
-        padding: '6px 10px',
-        fontSize: '13px',
-        cursor: 'pointer',
         fontWeight: bold ? 700 : 500,
-        fontStyle: italic ? 'italic' : 'normal',
-        textDecoration: underline ? 'underline' : 'none',
-        color: 'var(--color-text)'
+        fontStyle: italic ? "italic" : "normal",
+        textDecoration: underline ? "underline" : "none",
       }}
     >
       {label}
     </button>
-  )
-}
-
-const fieldLabel = {
-  display: 'block',
-  fontSize: '13px',
-  fontWeight: 600,
-  color: 'var(--color-text)',
-  marginBottom: '6px'
+  );
 }

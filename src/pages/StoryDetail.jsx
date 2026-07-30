@@ -253,7 +253,7 @@ export default function StoryDetail() {
   if (!story) return <p className="p-10 text-[#8B907F]">Story not found.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12 bg-[#FDFBF7] min-h-screen">
+    <div className="max-w-2xl mx-auto px-6 py-12 bg-transparent min-h-screen">
       <p className="text-sm text-[#6A4A50] uppercase tracking-widest mb-2">{story.genre}</p>
       <h1 className="text-4xl font-serif font-bold text-[#221A14] mb-3">{story.title}</h1>
       {story.subtitle && <p className="text-xl text-[#8B907F] mb-6">{story.subtitle}</p>}

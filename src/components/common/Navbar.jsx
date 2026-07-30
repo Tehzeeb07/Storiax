@@ -41,25 +41,25 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between bg-white">
+    <nav className="sticky top-0 z-40 border-b border-[#D6CABB] px-6 py-4 flex items-center justify-between theme-panel">
       <Link to="/" className="flex items-center gap-2">
         <img src={logo} alt="Storiax logo" className="w-8 h-8 object-contain" />
-        <span className="text-xl font-bold tracking-tight">Storiax</span>
+        <span className="text-xl font-bold tracking-tight text-[#221A14]">Storiax</span>
       </Link>
 
       <div className="flex items-center gap-6 text-sm">
-        <Link to="/" className="text-gray-600 hover:text-black transition">Home</Link>
-        <Link to="/explore" className="text-gray-600 hover:text-black transition">Explore</Link>
+        <Link to="/" className="text-[#6A4A50] hover:text-[#4B1F24] transition">Home</Link>
+        <Link to="/explore" className="text-[#6A4A50] hover:text-[#4B1F24] transition">Explore</Link>
 
         {user ? (
           <>
-            <Link to="/editor" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition">
+            <Link to="/editor" className="bg-[#4B1F24] text-white px-4 py-2 rounded-full hover:bg-[#381015] transition shadow-sm">
               Write
             </Link>
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="w-9 h-9 rounded-full bg-[#e8dfd0] overflow-hidden flex items-center justify-center text-sm font-bold text-[#8b6f47] border-2 border-transparent hover:border-[#c4a882] transition"
+                className="w-9 h-9 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-sm font-bold text-[#6A4A50] border-2 border-transparent hover:border-[#6A4A50] transition"
               >
                 {avatar?.avatar_url ? (
                   <img src={avatar.avatar_url} alt="avatar" className="w-full h-full object-cover" />
@@ -69,25 +69,25 @@ export default function Navbar() {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-lg overflow-hidden z-50">
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-800">@{avatar?.username}</p>
+                <div className="absolute right-0 top-full mt-2 w-48 theme-panel rounded-2xl overflow-hidden z-50">
+                  <div className="px-4 py-3 border-b border-[#D6CABB]">
+                    <p className="text-sm font-medium text-[#221A14]">@{avatar?.username}</p>
                   </div>
-                  <Link to={`/profile/${user.id}`} onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-[#faf7f2] transition">
-                    👤 My Profile
+                  <Link to={`/profile/${user.id}`} onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-[#221A14] hover:bg-[#FBF8F3] transition">
+                    My Profile
                   </Link>
-                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-[#faf7f2] transition">
-                    📊 Dashboard
+                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-[#221A14] hover:bg-[#FBF8F3] transition">
+                    Dashboard
                   </Link>
-                  <Link to="/bookmarks" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-[#faf7f2] transition">
-                    🔖 Bookmarks
+                  <Link to="/bookmarks" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-[#221A14] hover:bg-[#FBF8F3] transition">
+                    Bookmarks
                   </Link>
-                  <Link to="/settings" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-[#faf7f2] transition">
-                    ⚙️ Settings
+                  <Link to="/settings" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm text-[#221A14] hover:bg-[#FBF8F3] transition">
+                    Settings
                   </Link>
-                  <div className="border-t border-gray-100">
-                    <button onClick={handleLogout} className="flex items-center gap-2 w-full px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition">
-                      🚪 Logout
+                  <div className="border-t border-[#D6CABB]">
+                    <button onClick={handleLogout} className="flex items-center gap-2 w-full px-4 py-3 text-sm text-[#4B1F24] hover:bg-[#F3E7E5] transition">
+                      Logout
                     </button>
                   </div>
                 </div>
@@ -96,8 +96,8 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link to="/login" className="text-gray-600 hover:text-black transition">Login</Link>
-            <Link to="/register" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition">
+            <Link to="/login" className="text-[#6A4A50] hover:text-[#4B1F24] transition">Login</Link>
+            <Link to="/register" className="bg-[#4B1F24] text-white px-4 py-2 rounded-full hover:bg-[#381015] transition shadow-sm">
               Get Started
             </Link>
           </>
