@@ -230,7 +230,7 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#2C221E] pb-20">
-      <div className="relative bg-gradient-to-br from-[#6A4A50] via-[#4B1F24] to-[#7A3010] py-24 px-6 text-white overflow-hidden shadow-lg">
+      <div className="relative z-20 bg-gradient-to-br from-[#6A4A50] via-[#4B1F24] to-[#7A3010] py-24 px-6 text-white shadow-lg">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#8B907F_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
@@ -244,7 +244,7 @@ export default function Explore() {
             Search through captivating books, poems, short stories, and brilliant writers.
           </p>
 
-          <div className="relative max-w-2xl mx-auto" ref={searchRef}>
+          <div className="relative max-w-2xl mx-auto z-[100]" ref={searchRef}>
 
             {/* Background Glow */}
             <div className="absolute inset-0 bg-[#6A4A50]/20 blur-3xl rounded-full scale-110"></div>
@@ -384,7 +384,7 @@ export default function Explore() {
         </div>
       </div>
 
-      <div className="bg-[#E9E4DA] border-b border-[#DCD5C8] py-6 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 space-y-3">
+      <div className="bg-[#E9E4DA] border-b border-[#DCD5C8] py-6 px-6 sticky top-0 z-10 backdrop-blur-md bg-opacity-90 space-y-3">
         <div className="max-w-6xl mx-auto flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveCategory("All")}
