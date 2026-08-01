@@ -232,7 +232,7 @@ export default function Explore() {
       <div
           className="min-h-screen text-[#F5F0E8] pb-20"
           style={{
-              backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.94), rgba(34,26,20,0.97)), url('/books-bg.jpg')",
+              backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.85), rgba(34,26,20,0.92)), url('/newbook.png')",
               backgroundSize: 'cover',
               backgroundAttachment: 'fixed',
               backgroundPosition: 'center',
@@ -241,7 +241,7 @@ export default function Explore() {
           <div
               className="relative z-20 py-20 px-6 text-white shadow-lg"
               style={{
-                  backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.75), rgba(34,26,20,0.9)), url('/books-bg.jpg')",
+                  backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.5), rgba(34,26,20,0.7)), url('/newbook.png')",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
               }}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDraft, publishStory } from "../services/postService";
+import writingImg from '../assets/Writing_a_letter-bro.svg'
 
 const GENRES = ["Thriller", "Romance", "Fantasy", "Poetry", "Horror", "Mystery", "Fiction"];
 
