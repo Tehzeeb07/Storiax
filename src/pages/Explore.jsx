@@ -229,9 +229,23 @@ export default function Explore() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2C221E] pb-20">
-      <div className="relative z-20 bg-gradient-to-br from-[#6A4A50] via-[#4B1F24] to-[#7A3010] py-24 px-6 text-white shadow-lg">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#8B907F_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div
+          className="min-h-screen text-[#F5F0E8] pb-20"
+          style={{
+              backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.85), rgba(34,26,20,0.92)), url('/books-bg.jpg')",
+              backgroundSize: 'cover',
+              backgroundAttachment: 'fixed',
+              backgroundPosition: 'center',
+          }}
+      >
+          <div
+              className="relative z-20 py-20 px-6 text-white shadow-lg"
+              style={{
+                  backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.55), rgba(34,26,20,0.7)), url('/books-bg.jpg')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+              }}
+          >
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#DCD5C8] text-xs font-medium mb-4 border border-white/10">
@@ -384,7 +398,7 @@ export default function Explore() {
         </div>
       </div>
 
-      <div className="bg-[#E9E4DA] border-b border-[#DCD5C8] py-6 px-6 sticky top-0 z-10 backdrop-blur-md bg-opacity-90 space-y-3">
+      <div className="bg-[#221A14]/90 border-b border-[#4A3B32] py-6 px-6 sticky top-0 z-10 backdrop-blur-md space-y-3">
         <div className="max-w-6xl mx-auto flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveCategory("All")}
@@ -419,7 +433,7 @@ export default function Explore() {
             <button
               key={status}
               onClick={() => setCompletionFilter(status)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+              className={`px-4 py-3 rounded-full text-xs font-medium transition-all ${
                 completionFilter === status
                   ? "bg-orange-600 text-white"
                   : "bg-white text-[#4B1F24] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
@@ -436,7 +450,7 @@ export default function Explore() {
             <button
               key={tag}
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-              className={`px-3 py-1 rounded-full text-xs transition-all ${
+              className={`px-3 py-3 rounded-full text-xs transition-all ${
                 activeTag === tag ? "bg-[#6A4A50] text-white" : "bg-[#E9E4DA] text-[#4B1F24] hover:bg-[#DCD5C8]"
               }`}
             >
