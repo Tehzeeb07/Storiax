@@ -77,6 +77,7 @@ export default function Profile() {
     fetchProfile();
   }, [id, user]);
 
+
   useEffect(() => {
     async function fetchModalUsers() {
       if (!showModal) return;
@@ -144,7 +145,15 @@ export default function Profile() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <div
+      className="min-h-screen px-6 py-12 relative overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(180deg, rgba(34,26,20,0.35), rgba(34,26,20,0.92)), url('/cozy.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-5xl mx-auto">
         <div className="theme-panel rounded-[2rem] p-6 md:p-8 mb-10">
           <div className="flex items-start gap-6">

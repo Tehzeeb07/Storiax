@@ -229,23 +229,17 @@ export default function Explore() {
   }
 
   return (
-      <div
-          className="min-h-screen text-[#F5F0E8] pb-20"
-          style={{
-              backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.85), rgba(34,26,20,0.92)), url('/newbook.png')",
-              backgroundSize: 'cover',
-              backgroundAttachment: 'fixed',
-              backgroundPosition: 'center',
-          }}
-      >
-          <div
-              className="relative z-20 py-20 px-6 text-white shadow-lg"
-              style={{
-                  backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.5), rgba(34,26,20,0.7)), url('/newbook.png')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-              }}
-          >
+    <div
+      className="min-h-screen text-[#F5F0E8] pb-20"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.55), rgba(20,14,10,0.85)), url('/lib.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center 30%',
+      }}
+    >
+      
+          <div className="relative z-20 py-24 px-6 text-white">
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#DCD5C8] text-xs font-medium mb-4 border border-white/10">
@@ -398,18 +392,18 @@ export default function Explore() {
         </div>
       </div>
 
-      <div className="bg-[#221A14]/90 border-b border-[#4A3B32] py-6 px-6 sticky top-0 z-10 backdrop-blur-md space-y-3">
+      <div className="border-b border-white/10 py-5 px-6 sticky top-0 z-30 space-y-3">
         <div className="max-w-6xl mx-auto flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveCategory("All")}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
-              activeCategory === "All"
-                ? "bg-[#6A4A50] text-white shadow-md scale-105"
-                : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-            }`}
+            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap flex items-center gap-2 ${activeCategory === "All"
+                ? "bg-[#C9A0A6] text-[#221A14] shadow-md"
+                : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+              }`}
           >
             <Compass className="w-4 h-4" /> All Stories
           </button>
+
           {CATEGORIES.map((cat) => (
             <button
               key={cat.name}
@@ -417,11 +411,10 @@ export default function Explore() {
                 setActiveCategory(cat.name);
                 document.getElementById("stories-section")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
-                activeCategory === cat.name
-                  ? "bg-[#6A4A50] text-white shadow-md scale-105"
-                  : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-              }`}
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap flex items-center gap-2 ${activeCategory === cat.name
+                  ? "bg-[#C9A0A6] text-[#221A14] shadow-md"
+                  : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+                }`}
             >
               <span>{cat.emoji}</span> {cat.name}
             </button>
@@ -433,11 +426,10 @@ export default function Explore() {
             <button
               key={status}
               onClick={() => setCompletionFilter(status)}
-              className={`px-4 py-3 rounded-full text-xs font-medium transition-all ${
-                completionFilter === status
-                  ? "bg-orange-600 text-white"
-                  : "bg-white text-[#4B1F24] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-              }`}
+              className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${completionFilter === status
+                  ? "bg-[#C9A0A6] text-[#221A14]"
+                  : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+                }`}
             >
               {status}
             </button>
@@ -450,8 +442,8 @@ export default function Explore() {
             <button
               key={tag}
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-              className={`px-3 py-3 rounded-full text-xs transition-all ${
-                activeTag === tag ? "bg-[#6A4A50] text-white" : "bg-[#E9E4DA] text-[#4B1F24] hover:bg-[#DCD5C8]"
+              className={`px-3 py-1.5 rounded-full text-xs transition-all ${
+                activeTag === tag ? "bg-[#C9A0A6] text-[#221A14]" : "bg-white/10 text-[#DCD5C8] hover:bg-white/20"
               }`}
             >
               #{tag}
