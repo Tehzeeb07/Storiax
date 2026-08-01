@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDraft, publishStory } from "../services/postService";
-import writingImg from '../assets/Writing_a_letter-bro.svg'
+import writingImg from '../assets/Writing_a_letter-bro.svg';
 
 const GENRES = ["Thriller", "Romance", "Fantasy", "Poetry", "Horror", "Mystery", "Fiction"];
 
@@ -105,8 +105,14 @@ export default function Editor() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen px-6 py-12 relative overflow-hidden">
+      <img
+        src={writingImg}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute top-[5%] right-[2%] w-[520px] max-w-[45vw] z-0"
+      />
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="theme-panel rounded-[2rem] p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
             <div>
