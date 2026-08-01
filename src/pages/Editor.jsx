@@ -105,7 +105,15 @@ export default function Editor() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-12 relative overflow-hidden">
+    <div
+  className="min-h-screen px-6 py-12 relative overflow-hidden"
+  style={{
+    backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.55), rgba(20,14,10,0.85)), url('/write.png')",
+    backgroundSize: 'cover',
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center',
+  }}
+>
       <img
         src={writingImg}
         alt=""
