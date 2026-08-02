@@ -256,7 +256,7 @@ export default function StoryDetail() {
     <div
       className="min-h-screen"
       style={{
-        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.45), rgba(20,14,10,0.6)), url('/read.png')",
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
         backgroundPosition: 'center',
