@@ -254,14 +254,15 @@ export default function StoryDetail() {
 
   return (
     <div
-  className="max-w-2xl mx-auto px-6 py-12 min-h-screen"
-  style={{
-    backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
-    backgroundSize: 'cover',
-    backgroundAttachment: 'fixed',
-    backgroundPosition: 'center',
-  }}
->
+      className="min-h-screen"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="max-w-2xl mx-auto px-6 py-12">
       <p className="text-sm text-[#D6A98C] uppercase tracking-widest mb-2">{story.genre}</p>
       <h1 className="text-4xl font-serif font-bold text-[#F5F0E8] mb-3">{story.title}</h1>
       {story.subtitle && <p className="text-xl text-[#D6CABB] mb-6">{story.subtitle}</p>}
@@ -375,6 +376,7 @@ export default function StoryDetail() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

@@ -150,14 +150,15 @@ export default function ChapterRead() {
 
   return (
     <div
-  className="max-w-2xl mx-auto px-6 py-12 min-h-screen"
-  style={{
-    backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
-    backgroundSize: 'cover',
-    backgroundAttachment: 'fixed',
-    backgroundPosition: 'center',
-  }}
->
+      className="min-h-screen"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="max-w-2xl mx-auto px-6 py-12">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-[#D6A98C] mb-8">
         <Link to={`/story/${id}`} className="hover:underline">{story?.title}</Link>
@@ -244,28 +245,29 @@ export default function ChapterRead() {
             </button>
           </div>
         ) : (
-          <p className="text-sm text-gray-400 mb-8">
-            <Link to="/login" className="underline hover:text-black">Login</Link> to leave a comment.
-          </p>
+            <p className="text-sm text-[#D6CABB] mb-8">
+              <Link to="/login" className="underline hover:text-[#F5F0E8]">Login</Link> to leave a comment.
+            </p>
         )}
 
         {comments.length === 0 ? (
-          <p className="text-gray-400 text-sm">No comments yet. Be the first!</p>
+          <p className="text-[#D6CABB] text-sm">No comments yet. Be the first!</p>
         ) : (
           <div className="flex flex-col gap-6">
             {comments.map((c) => (
               <div key={c.id} className="flex gap-3">
                 {renderAvatar(c.profiles)}
                 <div>
-                  <p className="text-sm font-medium">{c.profiles?.username || "Unknown"}</p>
-                  <p className="text-sm text-gray-600 mt-0.5">{renderCommentText(c.comment)}</p>
-                  <p className="text-xs text-gray-400 mt-1">{new Date(c.created_at).toLocaleDateString()}</p>
+                  <p className="text-sm font-medium text-[#F5F0E8]">{c.profiles?.username || "Unknown"}</p>
+                  <p className="text-sm text-[#D6CABB] mt-0.5">{renderCommentText(c.comment)}</p>
+                  <p className="text-xs text-[#8B907F] mt-1">{new Date(c.created_at).toLocaleDateString()}</p>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }
