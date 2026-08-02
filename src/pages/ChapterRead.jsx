@@ -151,16 +151,16 @@ export default function ChapterRead() {
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-[#8b6f47] mb-8">
+      <div className="flex items-center gap-2 text-sm text-[#D6A98C] mb-8">
         <Link to={`/story/${id}`} className="hover:underline">{story?.title}</Link>
         <span>→</span>
         <span>{chapter.title}</span>
       </div>
 
-      <h1 className="text-3xl font-bold text-[#2c1a0e] mb-10">{chapter.title}</h1>
+      <h1 className="text-3xl font-bold text-[#F5F0E8] mb-10">{chapter.title}</h1>
 
       {/* Content */}
-      <div className="prose prose-lg max-w-none text-[#2c1a0e] mb-12 whitespace-pre-wrap">
+      <div className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap">
         {chapter.content}
       </div>
 
