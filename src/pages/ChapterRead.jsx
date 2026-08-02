@@ -13,6 +13,7 @@ export default function ChapterRead() {
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [mentionSuggestions, setMentionSuggestions] = useState([]);
+  const [fontSize, setFontSize] = useState(18); // NEW: default reading font size
   const { user } = useAuth();
 
   useEffect(() => {
@@ -166,12 +167,31 @@ export default function ChapterRead() {
         <span>{chapter.title}</span>
       </div>
 
-      <h1 className="text-4xl font-bold text-[#F5F0E8] mb-10">{chapter.title}</h1>
+      <h1 className="text-3xl font-bold text-[#F5F0E8] mb-6">{chapter.title}</h1>
+
+      {/* NEW: Font size control */}
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-xs text-[#D6CABB]">A</span>
+        <input
+          type="range"
+          min="14"
+          max="28"
+          step="1"
+          value={fontSize}
+          onChange={(e) => setFontSize(Number(e.target.value))}
+          className="w-32 accent-[#8b6f47] cursor-pointer"
+        />
+        <span className="text-lg text-[#D6CABB]">A</span>
+        <span className="text-xs text-[#8B907F] ml-1">{fontSize}px</span>
+      </div>
 
       {/* Content */}
-        <div className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap text-[19px] leading-[1.9]">
-          {chapter.content}
-        </div>
+      <div
+        className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap"
+        style={{ fontSize: `${fontSize}px` }}
+      >
+        {chapter.content}
+      </div>
 
       {/* Share Button */}
       <div className="flex justify-end mb-10">
