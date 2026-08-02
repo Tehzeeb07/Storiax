@@ -393,12 +393,8 @@ export default function Dashboard() {
                       onClick={() => navigate(`/story/${post.id}`)}
                       className="group flex flex-col rounded-2xl border border-[#D6CABB] bg-[rgba(255,255,255,0.46)] backdrop-blur-sm overflow-hidden hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(34,26,20,0.12)] transition cursor-pointer"
                     >
-                      {post.cover_url ? (
-                        <img
-                          src={post.cover_url}
-                          alt={post.title}
-                          className="h-28 w-full object-cover"
-                        />
+                      {post.cover_image ? (
+                        <img src={post.cover_image} alt={post.title} className="h-28 w-full object-cover" />
                       ) : (
                         <div className={`h-28 w-full bg-gradient-to-br ${coverColor} flex items-center justify-center`}>
                           <span className="text-2xl font-bold text-white/40 font-serif">
