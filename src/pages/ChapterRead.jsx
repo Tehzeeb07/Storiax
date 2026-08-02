@@ -149,7 +149,15 @@ export default function ChapterRead() {
   const nextChapter = chapters[currentIndex + 1];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div
+  className="max-w-2xl mx-auto px-6 py-12 min-h-screen"
+  style={{
+    backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.85), rgba(20,14,10,0.92)), url('/read.png')",
+    backgroundSize: 'cover',
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center',
+  }}
+>
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-[#D6A98C] mb-8">
         <Link to={`/story/${id}`} className="hover:underline">{story?.title}</Link>
@@ -168,7 +176,7 @@ export default function ChapterRead() {
       <div className="flex justify-end mb-10">
         <button
           onClick={handleShare}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 text-sm text-gray-500 hover:border-gray-400 hover:text-black transition"
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 text-sm text-[#D6CABB] hover:border-white/40 hover:text-[#F5F0E8] transition"
         >
           <span>🔗</span>
           <span>Share Chapter</span>
