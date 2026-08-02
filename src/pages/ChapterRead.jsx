@@ -149,18 +149,27 @@ export default function ChapterRead() {
   const nextChapter = chapters[currentIndex + 1];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.45), rgba(20,14,10,0.6)), url('/read.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="max-w-2xl mx-auto px-6 py-12">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-[#8b6f47] mb-8">
+      <div className="flex items-center gap-2 text-sm text-[#D6A98C] mb-8">
         <Link to={`/story/${id}`} className="hover:underline">{story?.title}</Link>
         <span>→</span>
         <span>{chapter.title}</span>
       </div>
 
-      <h1 className="text-3xl font-bold text-[#2c1a0e] mb-10">{chapter.title}</h1>
+      <h1 className="text-3xl font-bold text-[#F5F0E8] mb-10">{chapter.title}</h1>
 
       {/* Content */}
-      <div className="prose prose-lg max-w-none text-[#2c1a0e] mb-12 whitespace-pre-wrap">
+      <div className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap">
         {chapter.content}
       </div>
 
@@ -168,7 +177,7 @@ export default function ChapterRead() {
       <div className="flex justify-end mb-10">
         <button
           onClick={handleShare}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 text-sm text-gray-500 hover:border-gray-400 hover:text-black transition"
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 text-sm text-[#D6CABB] hover:border-white/40 hover:text-[#F5F0E8] transition"
         >
           <span>🔗</span>
           <span>Share Chapter</span>
@@ -176,25 +185,25 @@ export default function ChapterRead() {
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between border-t border-[#e8dfd0] pt-8 mb-16">
+      <div className="flex items-center justify-between border-t border-white/15 pt-8 mb-16">
         {prevChapter ? (
-          <Link to={`/story/${id}/chapter/${prevChapter.id}`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+          <Link to={`/story/${id}/chapter/${prevChapter.id}`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
             ← {prevChapter.title}
           </Link>
         ) : <div />}
-        <Link to={`/story/${id}/chapters`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+        <Link to={`/story/${id}/chapters`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
           All Chapters
         </Link>
         {nextChapter ? (
-          <Link to={`/story/${id}/chapter/${nextChapter.id}`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+          <Link to={`/story/${id}/chapter/${nextChapter.id}`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
             {nextChapter.title} →
           </Link>
         ) : <div />}
       </div>
 
       {/* Comments */}
-      <div className="border-t border-[#e8dfd0] pt-10">
-        <h2 className="text-xl font-bold text-[#2c1a0e] mb-6">Comments ({comments.length})</h2>
+      <div className="border-t border-white/15 pt-10">
+        <h2 className="text-xl font-bold text-[#F5F0E8] mb-6">Comments ({comments.length})</h2>
 
         {user ? (
           <div className="mb-8 relative">
@@ -236,28 +245,29 @@ export default function ChapterRead() {
             </button>
           </div>
         ) : (
-          <p className="text-sm text-gray-400 mb-8">
-            <Link to="/login" className="underline hover:text-black">Login</Link> to leave a comment.
-          </p>
+            <p className="text-sm text-[#D6CABB] mb-8">
+              <Link to="/login" className="underline hover:text-[#F5F0E8]">Login</Link> to leave a comment.
+            </p>
         )}
 
         {comments.length === 0 ? (
-          <p className="text-gray-400 text-sm">No comments yet. Be the first!</p>
+          <p className="text-[#D6CABB] text-sm">No comments yet. Be the first!</p>
         ) : (
           <div className="flex flex-col gap-6">
             {comments.map((c) => (
               <div key={c.id} className="flex gap-3">
                 {renderAvatar(c.profiles)}
                 <div>
-                  <p className="text-sm font-medium">{c.profiles?.username || "Unknown"}</p>
-                  <p className="text-sm text-gray-600 mt-0.5">{renderCommentText(c.comment)}</p>
-                  <p className="text-xs text-gray-400 mt-1">{new Date(c.created_at).toLocaleDateString()}</p>
+                  <p className="text-sm font-medium text-[#F5F0E8]">{c.profiles?.username || "Unknown"}</p>
+                  <p className="text-sm text-[#D6CABB] mt-0.5">{renderCommentText(c.comment)}</p>
+                  <p className="text-xs text-[#8B907F] mt-1">{new Date(c.created_at).toLocaleDateString()}</p>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

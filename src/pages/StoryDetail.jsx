@@ -268,7 +268,11 @@ export default function StoryDetail() {
       <h1 className="text-4xl font-serif font-bold text-[#F5F0E8] mb-3">{story.title}</h1>
       {story.subtitle && <p className="text-xl text-[#D6CABB] mb-6">{story.subtitle}</p>}
 
+<<<<<<< HEAD
       <div className="flex items-center justify-between border-b border-white/15 pb-6 mb-6">
+=======
+      <div className="flex items-center justify-between border-b border-white/15 pb-6 mb-10">
+>>>>>>> 3a190ede5c5bc6b5b2db63c8539ca0a96626a90e
         <div className="flex items-center gap-2 text-sm text-[#D6CABB]">
           <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-[#F5F0E8] transition">
             {story.profiles?.username || "Unknown"}
@@ -286,6 +290,7 @@ export default function StoryDetail() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* NEW: Font size control */}
       <div className="flex items-center gap-3 mb-6">
         <span className="text-xs text-[#D6CABB]">A</span>
@@ -308,6 +313,10 @@ export default function StoryDetail() {
         dangerouslySetInnerHTML={{ __html: story.content }}
       />
 
+=======
+      <div className="prose prose-lg prose-invert max-w-none mb-16 text-[#F5F0E8] bg-[#221A14]/50 rounded-2xl p-6 border border-white/10" dangerouslySetInnerHTML={{ __html: story.content }} />
+
+>>>>>>> 3a190ede5c5bc6b5b2db63c8539ca0a96626a90e
       <div className="border-t border-white/15 pt-10">
         <h2 className="text-xl font-serif font-bold text-[#F5F0E8] mb-6">Comments ({comments.length})</h2>
 

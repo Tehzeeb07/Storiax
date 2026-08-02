@@ -84,21 +84,37 @@ export default function Explore() {
 
   useEffect(() => {
     async function fetchTopWriters() {
-      const { data } = await supabase
+      const { data: posts } = await supabase
         .from("posts")
-        .select("author_id, profiles(username, full_name, avatar_url)")
+        .select("id, author_id, profiles(username, full_name, avatar_url)")
         .eq("status", "published");
 
-      if (data) {
-        const counts = {};
-        data.forEach((p) => {
-          if (!p.author_id) return;
-          if (!counts[p.author_id]) counts[p.author_id] = { count: 0, profile: p.profiles };
-          counts[p.author_id].count += 1;
-        });
-        const ranked = Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 5);
-        setTopWriters(ranked);
-      }
+      if (!posts) return;
+
+      const likeCounts = await Promise.all(
+        posts.map(async (p) => {
+          const { count } = await supabase
+            .from("likes")
+            .select("*", { count: "exact", head: true })
+            .eq("post_id", p.id);
+          return { author_id: p.author_id, profile: p.profiles, likes: count || 0 };
+        })
+      );
+
+      const authorTotals = {};
+      likeCounts.forEach((p) => {
+        if (!p.author_id) return;
+        if (!authorTotals[p.author_id]) {
+          authorTotals[p.author_id] = { count: 0, profile: p.profile, authorId: p.author_id };
+        }
+        authorTotals[p.author_id].count += p.likes;
+      });
+
+      const ranked = Object.values(authorTotals)
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 3);
+
+      setTopWriters(ranked);
     }
     fetchTopWriters();
   }, []);
@@ -477,6 +493,7 @@ export default function Explore() {
           </div>
         )}
 
+<<<<<<< HEAD
         <section className="mt-16 px-6 max-w-6xl mx-auto">
 
           <div className="flex items-center gap-2 mb-6">
@@ -522,6 +539,49 @@ export default function Explore() {
           </div>
 
         </section>
+=======
+        {/* Top Writers This Week */}
+        {topWriters.length > 0 && (
+          <section className="mt-16 px-6 max-w-6xl mx-auto">
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-xl">🏆</span>
+              <h2 className="text-2xl font-serif font-bold text-[#F5F0E8]">
+                Top Writers This Week
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {topWriters.map((writer, index) => (
+                <Link
+                  key={writer.profile?.username || index}
+                  to={`/profile/${writer.authorId}`}
+                  className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition"
+                >
+                  <div className="absolute top-3 left-3 bg-[#F4E6C8] text-[#8B5E34] text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                    {index + 1}
+                  </div>
+
+                  <div className="mx-auto w-16 h-16 rounded-full bg-[#EFE6D8] overflow-hidden flex items-center justify-center text-2xl font-bold text-[#4B1F24] mb-4">
+                    {writer.profile?.avatar_url ? (
+                      <img src={writer.profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      writer.profile?.full_name?.charAt(0) || writer.profile?.username?.charAt(0) || "?"
+                    )}
+                  </div>
+
+                  <h3 className="text-base font-bold" style={{ color: '#3D1015' }}>
+                    {writer.profile?.full_name || writer.profile?.username || "Unknown"}
+                  </h3>
+
+                  <p className="text-sm text-[#8B7B72] mt-1">
+                    {writer.count} {writer.count === 1 ? "like" : "likes"}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+>>>>>>> 3a190ede5c5bc6b5b2db63c8539ca0a96626a90e
 
         {recommended.length > 0 && (
           <div className="space-y-4">

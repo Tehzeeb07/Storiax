@@ -1,6 +1,9 @@
 import resetImg from '../assets/Login-bro.svg'
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3a190ede5c5bc6b5b2db63c8539ca0a96626a90e
 function AuthLayout({ title, children }) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-[#221A14]">
