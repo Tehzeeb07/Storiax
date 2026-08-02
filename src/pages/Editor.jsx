@@ -7,7 +7,8 @@ import writingImg from '../assets/Writing_a_letter-bro.svg';
 const GENRES = ["Thriller", "Romance", "Fantasy", "Poetry", "Horror", "Mystery", "Fiction"];
 
 export default function Editor() {
-  const navigate = useNavigate();
+  const { id } = useParams();
+  const editing = !!id;
   const contentRef = useRef(null);
 
   const [postType, setPostType] = useState("story");
@@ -26,6 +27,34 @@ export default function Editor() {
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!editing) return;
+
+    async function loadStory() {
+      const { data } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (!data) return;
+
+      setTitle(data.title || "");
+      setSubtitle(data.subtitle || "");
+      setGenre(data.genre || GENRES[0]);
+      setContent(data.content || "");
+
+      if (contentRef.current) {
+        contentRef.current.innerHTML = data.content || "";
+      }
+
+      setPostType(data.post_type || "story");
+      setHasChapters(data.has_chapters || false);
+    }
+
+    loadStory();
+  }, [editing, id]);
 
   function format(command) {
     document.execCommand(command, false, null);
@@ -85,10 +114,31 @@ export default function Editor() {
 
   async function handleSaveDraft() {
     setSaving(true);
+
     try {
-      await createDraft(buildStoryPayload(), postType, hasChapters);
+      if (editing) {
+        await updateStory(
+          id,
+          {
+            title,
+            subtitle,
+            genre,
+            content,
+            coverImage,
+          },
+          "draft",
+          postType,
+          hasChapters
+        );
+      } else {
+        await createDraft(buildStoryPayload(), postType, hasChapters);
+      }
+
       setAutoSaveStatus(
-        `Draft saved at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+        `Draft saved at ${new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`
       );
     } finally {
       setSaving(false);
@@ -97,8 +147,26 @@ export default function Editor() {
 
   async function handlePublish() {
     setSaving(true);
+
     try {
-      await publishStory(buildStoryPayload(), postType, hasChapters);
+      if (editing) {
+        await updateStory(
+          id,
+          {
+            title,
+            subtitle,
+            genre,
+            content,
+            coverImage,
+          },
+          "published",
+          postType,
+          hasChapters
+        );
+      } else {
+        await publishStory(buildStoryPayload(), postType, hasChapters);
+      }
+
       navigate("/dashboard");
     } finally {
       setSaving(false);
