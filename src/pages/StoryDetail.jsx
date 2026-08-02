@@ -285,7 +285,7 @@ export default function StoryDetail() {
         </div>
       </div>
 
-      <div className="prose prose-lg prose-invert max-w-none mb-16 text-[#F5F0E8] bg-[#221A14]/50 rounded-2xl p-6 border border-white/10" dangerouslySetInnerHTML={{ __html: story.content }} />
+      <div className="prose prose-lg prose-invert max-w-none mb-16 text-[#F5F0E8] bg-[#221A14]/50 rounded-2xl p-8 border border-white/10 text-[19px] leading-[1.9]" dangerouslySetInnerHTML={{ __html: story.content }} />
 
       <div className="border-t border-white/15 pt-10">
         <h2 className="text-xl font-serif font-bold text-[#F5F0E8] mb-6">Comments ({comments.length})</h2>

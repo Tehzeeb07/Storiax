@@ -166,12 +166,12 @@ export default function ChapterRead() {
         <span>{chapter.title}</span>
       </div>
 
-      <h1 className="text-3xl font-bold text-[#F5F0E8] mb-10">{chapter.title}</h1>
+      <h1 className="text-4xl font-bold text-[#F5F0E8] mb-10">{chapter.title}</h1>
 
       {/* Content */}
-      <div className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap">
-        {chapter.content}
-      </div>
+        <div className="prose prose-lg max-w-none text-[#F5F0E8] mb-12 whitespace-pre-wrap text-[19px] leading-[1.9]">
+          {chapter.content}
+        </div>
 
       {/* Share Button */}
       <div className="flex justify-end mb-10">
