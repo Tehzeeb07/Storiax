@@ -254,7 +254,7 @@ export default function Explore() {
         backgroundPosition: 'center 30%',
       }}
     >
-      
+
           <div className="relative z-20 py-24 px-6 text-white">
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
@@ -270,13 +270,10 @@ export default function Explore() {
 
           <div className="relative max-w-2xl mx-auto z-[100]" ref={searchRef}>
 
-            {/* Background Glow */}
             <div className="absolute inset-0 bg-[#6A4A50]/20 blur-3xl rounded-full scale-110"></div>
 
-            {/* Search Icon */}
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6A4A50] z-20" />
 
-            {/* Search Input */}
             <input
               type="text"
               placeholder="Search stories, books, writers..."
@@ -311,7 +308,6 @@ export default function Explore() {
     "
             />
 
-            {/* Search Results */}
             {showResults &&
               (searchResults.stories.length > 0 ||
                 searchResults.users.length > 0) && (
@@ -497,6 +493,51 @@ export default function Explore() {
           </div>
         )}
 
+        <section className="mt-16 px-6 max-w-6xl mx-auto">
+
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-xl">🏆</span>
+            <h2 className="text-2xl font-serif font-bold text-[#4B1F24]">
+              Top Writers This Week
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#F4E6C8] text-[#8B5E34] text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                1
+              </div>
+              <div className="mx-auto w-16 h-16 rounded-full bg-[#EFE6D8] flex items-center justify-center text-2xl font-bold text-[#4B1F24] mb-4">
+                Z
+              </div>
+              <h3 className="text-base font-bold text-[#4B1F24]">Zainab Afzal</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">6 stories</p>
+            </div>
+
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#E5E7EB] text-gray-600 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                2
+              </div>
+              <img src="/avatar.png" className="mx-auto w-16 h-16 rounded-full object-cover mb-4" />
+              <h3 className="text-base font-bold text-[#4B1F24]">Tehzebbbb</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">3 stories</p>
+            </div>
+
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#F3D6C6] text-[#8B4513] text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                3
+              </div>
+              <div className="mx-auto w-16 h-16 rounded-full bg-[#EFE6D8] flex items-center justify-center text-2xl font-bold text-[#4B1F24] mb-4">
+                M
+              </div>
+              <h3 className="text-base font-bold text-[#4B1F24]">maliar</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">1 story</p>
+            </div>
+
+          </div>
+
+        </section>
         {/* Top Writers This Week */}
         {topWriters.length > 0 && (
           <section className="mt-16 px-6 max-w-6xl mx-auto">
@@ -538,6 +579,7 @@ export default function Explore() {
             </div>
           </section>
         )}
+
 
         {recommended.length > 0 && (
           <div className="space-y-4">
@@ -668,37 +710,28 @@ function StoryCircleCard({ story, index = 0, bookmarkedIds, toggleBookmark, show
 
         </div>
 
-
         <h3 className="mt-3 text-sm font-bold text-[#221A14] line-clamp-1">
           {story.title}
         </h3>
-
 
         <p className="text-xs text-[#8B907F] truncate">
           by @{story.profiles?.username || "unknown"}
         </p>
 
-
         {showLikes && (
           <div className="flex gap-3 mt-2 text-xs text-[#8B907F]">
-
             <span className="flex items-center gap-1">
               <BookOpen className="w-3 h-3"/>
               {story.view_count || 0}
             </span>
-
-
             <span className="flex items-center gap-1 text-[#6A4A50]">
               <Heart className="w-3 h-3 fill-current"/>
               {story.likeCount || 0}
             </span>
-
           </div>
         )}
 
-
       </Link>
-
 
       <Link
         to={`/story/${story.id}`}

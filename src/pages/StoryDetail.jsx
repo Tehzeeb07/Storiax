@@ -268,12 +268,13 @@ export default function StoryDetail() {
       <h1 className="text-4xl font-serif font-bold text-[#F5F0E8] mb-3">{story.title}</h1>
       {story.subtitle && <p className="text-xl text-[#D6CABB] mb-6">{story.subtitle}</p>}
 
-      <div className="flex items-center justify-between border-b border-white/15 pb-6 mb-6">
-        <div className="flex items-center gap-2 text-sm text-[#D6CABB]">
+
+      <div className="flex items-center justify-between border-b border-white/15 pb-6 mb-10">
+        <p className="text-sm text-[#D6CABB]">
           <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-[#F5F0E8] transition">
             {story.profiles?.username || "Unknown"}
           </Link>
-        </div>
+        </p>
         <div className="flex items-center gap-3">
           <button onClick={handleLike} className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium transition ${liked ? "bg-[#F3E7E5] border-[#6A4A50]/30 text-[#4B1F24]" : "bg-white border-[#DCD5C8] text-[#8B907F] hover:border-[#6A4A50] hover:text-[#4B1F24]"}`}>
             <span>{liked ? "❤️" : "🤍"}</span>
@@ -285,6 +286,7 @@ export default function StoryDetail() {
           </button>
         </div>
       </div>
+
 
       {/* NEW: Font size control */}
       <div className="flex items-center gap-3 mb-6">

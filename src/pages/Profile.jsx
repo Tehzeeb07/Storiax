@@ -77,7 +77,6 @@ export default function Profile() {
     fetchProfile();
   }, [id, user]);
 
-
   useEffect(() => {
     async function fetchModalUsers() {
       if (!showModal) return;
@@ -300,7 +299,11 @@ export default function Profile() {
                   >
                     <div className="w-10 h-10 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-sm font-bold text-[#4B1F24] shrink-0">
                       {u.avatar_url ? (
-                        <img src={u.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                        <img
+                          src={u.avatar_url}
+                          alt="avatar"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         u.full_name?.charAt(0) || "?"
                       )}

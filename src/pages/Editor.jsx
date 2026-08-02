@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { createDraft, publishStory } from "../services/postService";
+import { useNavigate, useParams } from "react-router-dom";
+import { createDraft, publishStory, updateStory } from "../services/postService";
+import { supabase } from "../services/supabase";
 import writingImg from '../assets/Writing_a_letter-bro.svg';
 
 const GENRES = ["Thriller", "Romance", "Fantasy", "Poetry", "Horror", "Mystery", "Fiction"];
@@ -106,14 +107,14 @@ export default function Editor() {
 
   return (
     <div
-  className="min-h-screen px-6 py-12 relative overflow-hidden"
-  style={{
-    backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.55), rgba(20,14,10,0.85)), url('/write.png')",
-    backgroundSize: 'cover',
-    backgroundAttachment: 'fixed',
-    backgroundPosition: 'center',
-  }}
->
+      className="min-h-screen px-6 py-12 relative overflow-hidden"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.55), rgba(20,14,10,0.85)), url('/write.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
       <img
         src={writingImg}
         alt=""
