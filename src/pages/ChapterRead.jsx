@@ -184,25 +184,25 @@ export default function ChapterRead() {
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between border-t border-[#e8dfd0] pt-8 mb-16">
+      <div className="flex items-center justify-between border-t border-white/15 pt-8 mb-16">
         {prevChapter ? (
-          <Link to={`/story/${id}/chapter/${prevChapter.id}`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+          <Link to={`/story/${id}/chapter/${prevChapter.id}`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
             ← {prevChapter.title}
           </Link>
         ) : <div />}
-        <Link to={`/story/${id}/chapters`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+        <Link to={`/story/${id}/chapters`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
           All Chapters
         </Link>
         {nextChapter ? (
-          <Link to={`/story/${id}/chapter/${nextChapter.id}`} className="text-sm text-[#8b6f47] hover:text-[#2c1a0e] transition">
+          <Link to={`/story/${id}/chapter/${nextChapter.id}`} className="text-sm text-[#D6CABB] hover:text-[#F5F0E8] transition">
             {nextChapter.title} →
           </Link>
         ) : <div />}
       </div>
 
       {/* Comments */}
-      <div className="border-t border-[#e8dfd0] pt-10">
-        <h2 className="text-xl font-bold text-[#2c1a0e] mb-6">Comments ({comments.length})</h2>
+      <div className="border-t border-white/15 pt-10">
+        <h2 className="text-xl font-bold text-[#F5F0E8] mb-6">Comments ({comments.length})</h2>
 
         {user ? (
           <div className="mb-8 relative">
