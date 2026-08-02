@@ -42,6 +42,7 @@ export default function StoryDetail() {
   const [commentLikeCounts, setCommentLikeCounts] = useState({});
   const [mentionSuggestions, setMentionSuggestions] = useState([]);
   const [replyMentionSuggestions, setReplyMentionSuggestions] = useState([]);
+  const [fontSize, setFontSize] = useState(18); // NEW: default reading font size
 
   useEffect(() => {
     async function fetchAll() {
@@ -253,14 +254,23 @@ export default function StoryDetail() {
   if (!story) return <p className="p-10 text-[#8B907F]">Story not found.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12 bg-[#FDFBF7] min-h-screen">
-      <p className="text-sm text-[#6A4A50] uppercase tracking-widest mb-2">{story.genre}</p>
-      <h1 className="text-4xl font-serif font-bold text-[#221A14] mb-3">{story.title}</h1>
-      {story.subtitle && <p className="text-xl text-[#8B907F] mb-6">{story.subtitle}</p>}
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.45), rgba(20,14,10,0.6)), url('/read.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="max-w-2xl mx-auto px-6 py-12">
+      <p className="text-sm text-[#D6A98C] uppercase tracking-widest mb-2">{story.genre}</p>
+      <h1 className="text-4xl font-serif font-bold text-[#F5F0E8] mb-3">{story.title}</h1>
+      {story.subtitle && <p className="text-xl text-[#D6CABB] mb-6">{story.subtitle}</p>}
 
-      <div className="flex items-center justify-between border-b border-[#DCD5C8] pb-6 mb-10">
-        <div className="flex items-center gap-2 text-sm text-[#8B907F]">
-          <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-[#4B1F24] transition">
+      <div className="flex items-center justify-between border-b border-white/15 pb-6 mb-6">
+        <div className="flex items-center gap-2 text-sm text-[#D6CABB]">
+          <Link to={`/profile/${story.profiles?.id}`} className="hover:underline hover:text-[#F5F0E8] transition">
             {story.profiles?.username || "Unknown"}
           </Link>
         </div>
@@ -276,10 +286,30 @@ export default function StoryDetail() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none mb-16 text-[#221A14]" dangerouslySetInnerHTML={{ __html: story.content }} />
+      {/* NEW: Font size control */}
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-xs text-[#D6CABB]">A</span>
+        <input
+          type="range"
+          min="14"
+          max="28"
+          step="1"
+          value={fontSize}
+          onChange={(e) => setFontSize(Number(e.target.value))}
+          className="w-32 accent-[#6A4A50] cursor-pointer"
+        />
+        <span className="text-lg text-[#D6CABB]">A</span>
+        <span className="text-xs text-[#8B907F] ml-1">{fontSize}px</span>
+      </div>
 
-      <div className="border-t border-[#DCD5C8] pt-10">
-        <h2 className="text-xl font-serif font-bold text-[#4B1F24] mb-6">Comments ({comments.length})</h2>
+      <div
+        className="prose prose-lg prose-invert max-w-none mb-16 text-[#F5F0E8] bg-[#221A14]/50 rounded-2xl p-6 border border-white/10"
+        style={{ fontSize: `${fontSize}px` }}
+        dangerouslySetInnerHTML={{ __html: story.content }}
+      />
+
+      <div className="border-t border-white/15 pt-10">
+        <h2 className="text-xl font-serif font-bold text-[#F5F0E8] mb-6">Comments ({comments.length})</h2>
 
         {user ? (
           <div className="mb-8 relative">
@@ -297,13 +327,13 @@ export default function StoryDetail() {
             </button>
           </div>
         ) : (
-          <p className="text-sm text-[#8B907F] mb-8">
-            <Link to="/login" className="underline hover:text-[#4B1F24]">Login</Link> to leave a comment.
-          </p>
+            <p className="text-sm text-[#D6CABB] mb-8">
+              <Link to="/login" className="underline hover:text-[#F5F0E8]">Login</Link> to leave a comment.
+            </p>
         )}
 
         {topLevelComments.length === 0 ? (
-          <p className="text-[#8B907F] text-sm">No comments yet. Be the first!</p>
+          <p className="text-[#D6CABB] text-sm">No comments yet. Be the first!</p>
         ) : (
           <div className="flex flex-col gap-6">
             {topLevelComments.map((c) => (
@@ -311,8 +341,8 @@ export default function StoryDetail() {
                 <div className="flex gap-3">
                   {renderAvatar(c.profiles)}
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-[#221A14]">{c.profiles?.username || "Unknown"}</p>
-                    <p className="text-sm text-[#4B1F24] mt-0.5">{renderCommentText(c.comment)}</p>
+                    <p className="text-sm font-medium text-[#F5F0E8]">{c.profiles?.username || "Unknown"}</p>
+                    <p className="text-sm text-[#D6CABB] mt-0.5">{renderCommentText(c.comment)}</p>
                     <div className="flex items-center gap-3 mt-2">
                       {renderCommentLikeButton(c.id)}
                       {user && (
@@ -350,8 +380,8 @@ export default function StoryDetail() {
                           <div key={reply.id} className="flex gap-3">
                             {renderAvatar(reply.profiles)}
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-[#221A14]">{reply.profiles?.username || "Unknown"}</p>
-                              <p className="text-sm text-[#4B1F24] mt-0.5">{renderCommentText(reply.comment)}</p>
+                              <p className="text-sm font-medium text-[#F5F0E8]">{reply.profiles?.username || "Unknown"}</p>
+                              <p className="text-sm text-[#D6CABB] mt-0.5">{renderCommentText(reply.comment)}</p>
                               <div className="flex items-center gap-3 mt-2">
                                 {renderCommentLikeButton(reply.id)}
                               </div>
@@ -367,6 +397,7 @@ export default function StoryDetail() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

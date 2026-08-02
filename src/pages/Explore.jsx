@@ -229,23 +229,17 @@ export default function Explore() {
   }
 
   return (
-      <div
-          className="min-h-screen text-[#F5F0E8] pb-20"
-          style={{
-              backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.85), rgba(34,26,20,0.92)), url('/books-bg.jpg')",
-              backgroundSize: 'cover',
-              backgroundAttachment: 'fixed',
-              backgroundPosition: 'center',
-          }}
-      >
-          <div
-              className="relative z-20 py-20 px-6 text-white shadow-lg"
-              style={{
-                  backgroundImage: "linear-gradient(180deg, rgba(34,26,20,0.55), rgba(34,26,20,0.7)), url('/books-bg.jpg')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-              }}
-          >
+    <div
+      className="min-h-screen text-[#F5F0E8] pb-20"
+      style={{
+        backgroundImage: "linear-gradient(180deg, rgba(20,14,10,0.55), rgba(20,14,10,0.85)), url('/lib.png')",
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center 30%',
+      }}
+    >
+
+          <div className="relative z-20 py-24 px-6 text-white">
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#DCD5C8] text-xs font-medium mb-4 border border-white/10">
@@ -260,13 +254,10 @@ export default function Explore() {
 
           <div className="relative max-w-2xl mx-auto z-[100]" ref={searchRef}>
 
-            {/* Background Glow */}
             <div className="absolute inset-0 bg-[#6A4A50]/20 blur-3xl rounded-full scale-110"></div>
 
-            {/* Search Icon */}
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6A4A50] z-20" />
 
-            {/* Search Input */}
             <input
               type="text"
               placeholder="Search stories, books, writers..."
@@ -301,7 +292,6 @@ export default function Explore() {
     "
             />
 
-            {/* Search Results */}
             {showResults &&
               (searchResults.stories.length > 0 ||
                 searchResults.users.length > 0) && (
@@ -398,18 +388,18 @@ export default function Explore() {
         </div>
       </div>
 
-      <div className="bg-[#221A14]/90 border-b border-[#4A3B32] py-6 px-6 sticky top-0 z-10 backdrop-blur-md space-y-3">
+      <div className="border-b border-white/10 py-5 px-6 sticky top-0 z-30 space-y-3">
         <div className="max-w-6xl mx-auto flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveCategory("All")}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
-              activeCategory === "All"
-                ? "bg-[#6A4A50] text-white shadow-md scale-105"
-                : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-            }`}
+            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap flex items-center gap-2 ${activeCategory === "All"
+                ? "bg-[#C9A0A6] text-[#221A14] shadow-md"
+                : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+              }`}
           >
             <Compass className="w-4 h-4" /> All Stories
           </button>
+
           {CATEGORIES.map((cat) => (
             <button
               key={cat.name}
@@ -417,11 +407,10 @@ export default function Explore() {
                 setActiveCategory(cat.name);
                 document.getElementById("stories-section")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm flex items-center gap-2 ${
-                activeCategory === cat.name
-                  ? "bg-[#6A4A50] text-white shadow-md scale-105"
-                  : "bg-white text-[#7A7488] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-              }`}
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap flex items-center gap-2 ${activeCategory === cat.name
+                  ? "bg-[#C9A0A6] text-[#221A14] shadow-md"
+                  : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+                }`}
             >
               <span>{cat.emoji}</span> {cat.name}
             </button>
@@ -433,11 +422,10 @@ export default function Explore() {
             <button
               key={status}
               onClick={() => setCompletionFilter(status)}
-              className={`px-4 py-3 rounded-full text-xs font-medium transition-all ${
-                completionFilter === status
-                  ? "bg-orange-600 text-white"
-                  : "bg-white text-[#4B1F24] border border-[#DCD5C8] hover:bg-[#E9E4DA]"
-              }`}
+              className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${completionFilter === status
+                  ? "bg-[#C9A0A6] text-[#221A14]"
+                  : "bg-white/10 text-[#E9E4DA] border border-white/15 hover:bg-white/20"
+                }`}
             >
               {status}
             </button>
@@ -450,8 +438,8 @@ export default function Explore() {
             <button
               key={tag}
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-              className={`px-3 py-3 rounded-full text-xs transition-all ${
-                activeTag === tag ? "bg-[#6A4A50] text-white" : "bg-[#E9E4DA] text-[#4B1F24] hover:bg-[#DCD5C8]"
+              className={`px-3 py-1.5 rounded-full text-xs transition-all ${
+                activeTag === tag ? "bg-[#C9A0A6] text-[#221A14]" : "bg-white/10 text-[#DCD5C8] hover:bg-white/20"
               }`}
             >
               #{tag}
@@ -489,7 +477,6 @@ export default function Explore() {
           </div>
         )}
 
-        {/* Top Writers This Week */}
         <section className="mt-16 px-6 max-w-6xl mx-auto">
 
           <div className="flex items-center gap-2 mb-6">
@@ -499,216 +486,38 @@ export default function Explore() {
             </h2>
           </div>
 
-
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
-            {/* 1st Writer */}
-            <div className="
-      relative
-      bg-white
-      border
-      border-[#E8DED2]
-      rounded-2xl
-      p-6
-      text-center
-      shadow-sm
-      hover:shadow-lg
-      transition
-    ">
-
-              <div className="
-        absolute
-        top-3
-        left-3
-        bg-[#F4E6C8]
-        text-[#8B5E34]
-        text-xs
-        font-bold
-        rounded-full
-        w-6
-        h-6
-        flex
-        items-center
-        justify-center
-      ">
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#F4E6C8] text-[#8B5E34] text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                 1
               </div>
-
-
-              <div className="
-        mx-auto
-        w-16
-        h-16
-        rounded-full
-        bg-[#EFE6D8]
-        flex
-        items-center
-        justify-center
-        text-2xl
-        font-bold
-        text-[#4B1F24]
-        mb-4
-      ">
+              <div className="mx-auto w-16 h-16 rounded-full bg-[#EFE6D8] flex items-center justify-center text-2xl font-bold text-[#4B1F24] mb-4">
                 Z
               </div>
-
-
-              <h3 className="
-        text-base
-        font-bold
-        text-[#4B1F24]
-      ">
-                Zainab Afzal
-              </h3>
-
-              <p className="
-        text-sm
-        text-[#8B7B72]
-        mt-1
-      ">
-                6 stories
-              </p>
-
+              <h3 className="text-base font-bold text-[#4B1F24]">Zainab Afzal</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">6 stories</p>
             </div>
 
-
-
-            {/* 2nd Writer */}
-            <div className="
-      relative
-      bg-white
-      border
-      border-[#E8DED2]
-      rounded-2xl
-      p-6
-      text-center
-      shadow-sm
-      hover:shadow-lg
-      transition
-    ">
-
-              <div className="
-        absolute
-        top-3
-        left-3
-        bg-[#E5E7EB]
-        text-gray-600
-        text-xs
-        font-bold
-        rounded-full
-        w-6
-        h-6
-        flex
-        items-center
-        justify-center
-      ">
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#E5E7EB] text-gray-600 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                 2
               </div>
-
-
-              <img
-                src="/avatar.png"
-                className="
-          mx-auto
-          w-16
-          h-16
-          rounded-full
-          object-cover
-          mb-4
-        "
-              />
-
-
-              <h3 className="
-        text-base
-        font-bold
-        text-[#4B1F24]
-      ">
-                Tehzebbbb
-              </h3>
-
-              <p className="
-        text-sm
-        text-[#8B7B72]
-        mt-1
-      ">
-                3 stories
-              </p>
-
+              <img src="/avatar.png" className="mx-auto w-16 h-16 rounded-full object-cover mb-4" />
+              <h3 className="text-base font-bold text-[#4B1F24]">Tehzebbbb</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">3 stories</p>
             </div>
 
-
-
-            {/* 3rd Writer */}
-            <div className="
-      relative
-      bg-white
-      border
-      border-[#E8DED2]
-      rounded-2xl
-      p-6
-      text-center
-      shadow-sm
-      hover:shadow-lg
-      transition
-    ">
-
-
-              <div className="
-        absolute
-        top-3
-        left-3
-        bg-[#F3D6C6]
-        text-[#8B4513]
-        text-xs
-        font-bold
-        rounded-full
-        w-6
-        h-6
-        flex
-        items-center
-        justify-center
-      ">
+            <div className="relative bg-white border border-[#E8DED2] rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+              <div className="absolute top-3 left-3 bg-[#F3D6C6] text-[#8B4513] text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                 3
               </div>
-
-
-              <div className="
-        mx-auto
-        w-16
-        h-16
-        rounded-full
-        bg-[#EFE6D8]
-        flex
-        items-center
-        justify-center
-        text-2xl
-        font-bold
-        text-[#4B1F24]
-        mb-4
-      ">
+              <div className="mx-auto w-16 h-16 rounded-full bg-[#EFE6D8] flex items-center justify-center text-2xl font-bold text-[#4B1F24] mb-4">
                 M
               </div>
-
-
-              <h3 className="
-        text-base
-        font-bold
-        text-[#4B1F24]
-      ">
-                maliar
-              </h3>
-
-              <p className="
-        text-sm
-        text-[#8B7B72]
-        mt-1
-      ">
-                1 story
-              </p>
-
+              <h3 className="text-base font-bold text-[#4B1F24]">maliar</h3>
+              <p className="text-sm text-[#8B7B72] mt-1">1 story</p>
             </div>
-
 
           </div>
 
@@ -843,37 +652,28 @@ function StoryCircleCard({ story, index = 0, bookmarkedIds, toggleBookmark, show
 
         </div>
 
-
         <h3 className="mt-3 text-sm font-bold text-[#221A14] line-clamp-1">
           {story.title}
         </h3>
-
 
         <p className="text-xs text-[#8B907F] truncate">
           by @{story.profiles?.username || "unknown"}
         </p>
 
-
         {showLikes && (
           <div className="flex gap-3 mt-2 text-xs text-[#8B907F]">
-
             <span className="flex items-center gap-1">
               <BookOpen className="w-3 h-3"/>
               {story.view_count || 0}
             </span>
-
-
             <span className="flex items-center gap-1 text-[#6A4A50]">
               <Heart className="w-3 h-3 fill-current"/>
               {story.likeCount || 0}
             </span>
-
           </div>
         )}
 
-
       </Link>
-
 
       <Link
         to={`/story/${story.id}`}

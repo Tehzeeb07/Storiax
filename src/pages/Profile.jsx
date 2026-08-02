@@ -9,14 +9,14 @@ function StatPill({ icon: Icon, label, value, onClick }) {
   return (
     <Wrapper
       onClick={onClick}
-      className="flex items-center gap-3 bg-white/70 backdrop-blur-sm border border-[#e8dfd0] rounded-2xl px-4 py-3 text-left hover:border-[#c4a882] transition"
+      className="flex items-center gap-3 bg-white/8 backdrop-blur-sm border border-[#D6CABB]/20 rounded-2xl px-4 py-3 text-left hover:border-[#E9E4DA]/40 transition"
     >
-      <div className="w-9 h-9 rounded-full bg-[#2c1a0e] flex items-center justify-center shrink-0">
+      <div className="w-9 h-9 rounded-full bg-[#4B1F24] flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4 text-white" />
       </div>
       <div>
-        <p className="text-lg font-bold leading-none text-[#2c1a0e]">{value}</p>
-        <p className="text-xs text-[#8b6f47] mt-1">{label}</p>
+        <p className="text-lg font-bold leading-none text-[#F5F0E8]">{value}</p>
+        <p className="text-xs text-[#D6CABB] mt-1">{label}</p>
       </div>
     </Wrapper>
   );
@@ -88,7 +88,7 @@ export default function Profile() {
           .select("follower_id")
           .eq("following_id", id);
 
-        if (data && data.length > 0) {
+        if (data?.length) {
           const ids = data.map((f) => f.follower_id);
           const { data: users } = await supabase
             .from("profiles")
@@ -102,7 +102,7 @@ export default function Profile() {
           .select("following_id")
           .eq("follower_id", id);
 
-        if (data && data.length > 0) {
+        if (data?.length) {
           const ids = data.map((f) => f.following_id);
           const { data: users } = await supabase
             .from("profiles")
@@ -134,18 +134,8 @@ export default function Profile() {
     }
   }
 
-  if (loading)
-    return (
-      <div className="min-h-screen bg-[#faf7f2] flex items-center justify-center">
-        <p className="text-[#8b6f47]">Loading...</p>
-      </div>
-    );
-  if (!profile)
-    return (
-      <div className="min-h-screen bg-[#faf7f2] flex items-center justify-center">
-        <p className="text-[#8b6f47]">Profile not found.</p>
-      </div>
-    );
+  if (loading) return <p className="p-10 text-[#D6CABB]">Loading...</p>;
+  if (!profile) return <p className="p-10 text-[#D6CABB]">Profile not found.</p>;
 
   const isOwnProfile = user?.id === id;
   const totalViews = stories.reduce(
@@ -154,58 +144,60 @@ export default function Profile() {
   );
 
   return (
-    <div className="min-h-screen bg-[#faf7f2]">
-      {/* Hero band */}
-      <div className="bg-gradient-to-br from-[#f3e9dc] via-[#f7ede1] to-[#faf7f2] border-b border-[#e8dfd0]">
-        <div className="max-w-4xl mx-auto px-6 pt-12 pb-8">
+    <div
+      className="min-h-screen px-6 py-12 relative overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(180deg, rgba(34,26,20,0.35), rgba(34,26,20,0.92)), url('/cozy.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="max-w-5xl mx-auto">
+        <div className="theme-panel rounded-[2rem] p-6 md:p-8 mb-10">
           <div className="flex items-start gap-6">
-            <div className="w-24 h-24 rounded-full bg-[#e8dfd0] overflow-hidden flex items-center justify-center text-3xl font-bold text-[#8b6f47] shrink-0 border-4 border-white shadow-sm">
+            <div className="w-24 h-24 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-3xl font-bold text-[#4B1F24] shrink-0 border border-[#D6CABB]/20">
               {profile.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt="avatar"
-                  className="w-full h-full object-cover"
-                />
+                <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
               ) : (
                 profile.full_name?.charAt(0) || "?"
               )}
             </div>
-            <div className="flex-1 pt-1">
-              <div className="flex items-center justify-between gap-4">
+
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl font-serif font-bold text-[#2c1a0e]">
-                    {profile.full_name}
-                  </h1>
-                  <p className="text-[#8b6f47]">@{profile.username}</p>
+                  <h1 className="text-3xl font-serif font-bold text-[#F5F0E8]">{profile.full_name}</h1>
+                  <p className="text-[#D6CABB]">@{profile.username}</p>
                 </div>
+
                 {!isOwnProfile && user && (
                   <button
                     onClick={handleFollow}
                     className={`px-5 py-2 rounded-full text-sm font-medium border transition ${
                       following
-                        ? "bg-white border-[#e8dfd0] text-[#8b6f47] hover:border-red-300 hover:text-red-500"
-                        : "bg-[#2c1a0e] text-[#faf7f2] border-[#2c1a0e] hover:bg-[#4a2e1a]"
+                        ? "bg-white/10 border-[#D6CABB]/30 text-[#F5F0E8] hover:border-[#F5F0E8]"
+                        : "bg-[#4B1F24] text-white border-[#4B1F24] hover:bg-[#381015]"
                     }`}
                   >
                     {following ? "Following" : "Follow"}
                   </button>
                 )}
+
                 {isOwnProfile && (
                   <Link
                     to="/settings"
-                    className="px-5 py-2 rounded-full text-sm font-medium border border-[#e8dfd0] text-[#8b6f47] hover:border-[#2c1a0e] hover:text-[#2c1a0e] transition"
+                    className="px-5 py-2 rounded-full text-sm font-medium border border-[#D6CABB]/30 text-[#F5F0E8] hover:border-[#F5F0E8] transition"
                   >
                     Edit Profile
                   </Link>
                 )}
               </div>
-              {profile.bio && (
-                <p className="text-[#5c4a38] mt-3 text-sm max-w-lg">{profile.bio}</p>
-              )}
+
+              {profile.bio && <p className="text-[#E9E4DA] mt-3 text-sm max-w-2xl">{profile.bio}</p>}
             </div>
           </div>
 
-          {/* Stats row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
             <StatPill
               icon={Users}
@@ -223,36 +215,31 @@ export default function Profile() {
             <StatPill icon={Eye} label="Total views" value={totalViews} />
           </div>
 
-          <p className="flex items-center gap-1.5 text-[#8b6f47] text-xs mt-5">
+          <p className="flex items-center gap-1.5 text-[#D6CABB] text-xs mt-5">
             <Calendar className="w-3.5 h-3.5" />
             Joined {new Date(profile.created_at).toLocaleDateString()}
           </p>
         </div>
-      </div>
 
-      {/* Published Works */}
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        <div className="bg-white border border-[#e8dfd0] rounded-3xl p-6 sm:p-8">
+        <div className="theme-panel rounded-[2rem] p-6 md:p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-9 h-9 rounded-full bg-[#faf7f2] flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#8b6f47]" />
+            <div className="w-9 h-9 rounded-full bg-[#E9E4DA] flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-[#4B1F24]" />
             </div>
-            <h2 className="text-lg font-serif font-bold text-[#2c1a0e]">
-              Published Works
-            </h2>
+            <h2 className="text-lg font-serif font-bold text-[#F5F0E8]">Published Works</h2>
           </div>
 
           {stories.length === 0 ? (
-            <p className="text-[#8b6f47]">No published works yet.</p>
+            <p className="text-[#D6CABB]">No published works yet.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {stories.map((story, index) => (
                 <Link
                   to={`/story/${story.id}`}
                   key={story.id}
-                  className="group rounded-xl overflow-hidden border border-[#e8dfd0] bg-[#faf7f2] hover:-translate-y-1 hover:shadow-lg transition"
+                  className="group rounded-[1.5rem] overflow-hidden border border-[#D6CABB]/20 bg-white/5 hover:shadow-[0_18px_45px_rgba(34,26,20,0.14)] transition"
                 >
-                  <div className="w-full h-44 bg-[#fdf8f3] overflow-hidden flex items-center justify-center">
+                  <div className="w-full h-44 bg-[#221A14]/35 overflow-hidden flex items-center justify-center">
                     {story.cover_image ? (
                       <img
                         src={story.cover_image}
@@ -260,35 +247,21 @@ export default function Profile() {
                         className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
                       />
                     ) : (
-                      <div
-                        className={`w-full h-full flex items-center justify-center ${
-                          ["bg-[#c4a882]", "bg-[#8b6f47]", "bg-[#a08060]", "bg-[#6b4f2e]", "bg-[#d4b896]"][
-                            index % 5
-                          ]
-                        }`}
-                      >
+                      <div className={`w-full h-full flex items-center justify-center ${["bg-[#4B5A3A]", "bg-[#8B907F]", "bg-[#6A4A50]", "bg-[#4B1F24]", "bg-[#4A2E1F]"][index % 5]}`}>
                         <span className="text-white text-4xl opacity-30">✦</span>
                       </div>
                     )}
                   </div>
                   <div className="p-4">
-                    <p className="text-xs text-[#8b6f47] uppercase tracking-widest mb-1">
-                      {story.genre}
-                    </p>
-                    <h2 className="text-base font-semibold text-[#2c1a0e] mb-1 line-clamp-2 group-hover:underline">
+                    <p className="text-xs text-[#D6CABB] uppercase tracking-widest mb-1">{story.genre}</p>
+                    <h2 className="text-base font-semibold text-[#F5F0E8] mb-1 line-clamp-2 group-hover:underline">
                       {story.title}
                     </h2>
-                    {story.subtitle && (
-                      <p className="text-sm text-[#7a6050] line-clamp-2 mb-2">
-                        {story.subtitle}
-                      </p>
-                    )}
+                    {story.subtitle && <p className="text-sm text-[#E9E4DA] line-clamp-2 mb-2">{story.subtitle}</p>}
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-[#8b6f47]">
-                        {new Date(story.created_at).toLocaleDateString()}
-                      </p>
+                      <p className="text-xs text-[#D6CABB]">{new Date(story.created_at).toLocaleDateString()}</p>
                       {typeof story.views === "number" && (
-                        <span className="flex items-center gap-1 text-xs text-[#8b6f47]">
+                        <span className="flex items-center gap-1 text-xs text-[#D6CABB]">
                           <Eye className="w-3 h-3" />
                           {story.views}
                         </span>
@@ -302,34 +275,29 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Followers/Following Modal */}
       {showModal && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
-          style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+          style={{ backgroundColor: "rgba(17,12,10,0.58)" }}
         >
-          <div className="bg-white rounded-2xl w-full max-w-sm mx-4 overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b">
-              <h3 className="font-bold text-[#2c1a0e] capitalize">{showModal}</h3>
-              <button
-                onClick={() => setShowModal(null)}
-                className="text-gray-400 hover:text-black text-xl"
-              >
-                ✕
-              </button>
+          <div className="theme-panel rounded-2xl w-full max-w-sm mx-4 overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#D6CABB]/20">
+              <h3 className="font-bold text-[#F5F0E8] capitalize">{showModal}</h3>
+              <button onClick={() => setShowModal(null)} className="text-[#D6CABB] hover:text-[#F5F0E8] text-xl">✕</button>
             </div>
+
             <div className="max-h-80 overflow-y-auto">
               {modalUsers.length === 0 ? (
-                <p className="text-gray-400 text-sm p-5">No {showModal} yet.</p>
+                <p className="text-[#D6CABB] text-sm p-5">No {showModal} yet.</p>
               ) : (
                 modalUsers.map((u) => (
                   <Link
                     key={u.id}
                     to={`/profile/${u.id}`}
                     onClick={() => setShowModal(null)}
-                    className="flex items-center gap-3 px-5 py-3 hover:bg-[#faf7f2] transition"
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-white/10 transition"
                   >
-                    <div className="w-10 h-10 rounded-full bg-[#e8dfd0] overflow-hidden flex items-center justify-center text-sm font-bold text-[#8b6f47] shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-[#E9E4DA] overflow-hidden flex items-center justify-center text-sm font-bold text-[#4B1F24] shrink-0">
                       {u.avatar_url ? (
                         <img
                           src={u.avatar_url}
@@ -341,10 +309,8 @@ export default function Profile() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#2c1a0e]">
-                        {u.full_name}
-                      </p>
-                      <p className="text-xs text-[#8b6f47]">@{u.username}</p>
+                      <p className="text-sm font-medium text-[#F5F0E8]">{u.full_name}</p>
+                      <p className="text-xs text-[#D6CABB]">@{u.username}</p>
                     </div>
                   </Link>
                 ))
